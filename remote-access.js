@@ -5,7 +5,9 @@ const t = setTimeout(() => {
   Deno.exit(1)
 }, 10000)
 
-const hostname = Deno.env.get('HOSTNAME') || 'localhost'
+const password = Deno.env.get('AC_PASSWORD') || Deno.env.get('PASSWORD').slice(0, 16)
+const hostname = Deno.env.get('AC_HOSTNAME') || 'localhost'
+
 const conn = await Deno.connect({ hostname, port: '3443' })
 const decoder = new TextDecoder()
 const encoder = new TextEncoder()
@@ -31,7 +33,7 @@ await expect('Authentication Required\r\n')
 await expect('Username: ')
 await send('system')
 await expect('Password: ')
-await send(Deno.env.get('PASSWORD'))
+await send(password)
 await expect(`Welcome to an AzerothCore server.
 |cffFF4A2DThis server runs on AzerothCore|r |cff3CE7FFwww.azerothcore.org|r\r\n`)
 await expect('AC>')
