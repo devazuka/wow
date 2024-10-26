@@ -80,3 +80,11 @@ export const starterVendor = [
   40477, // Insignia of the Horde (Horde)
   19024, // Arena Grand Master (Custom) 0 stamina only use
 ]
+
+export const starterByClass = {
+  shaman: [46978],
+}
+
+export const starterByRace = {
+
+}

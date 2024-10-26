@@ -5,8 +5,8 @@ const t = setTimeout(() => {
   Deno.exit(1)
 }, 10000)
 
-const password = Deno.env.get('AC_PASSWORD') || Deno.env.get('PASSWORD').slice(0, 16)
-const hostname = Deno.env.get('AC_HOSTNAME') || 'localhost'
+const password = Deno.env.get('PASSWORD').slice(0, 16)
+const hostname = Deno.env.get('HOSTNAME') || 'localhost'
 
 const conn = await Deno.connect({ hostname, port: '3443' })
 const decoder = new TextDecoder()
@@ -24,8 +24,8 @@ const next = async () => {
   return len === buf.byteLength ? text + (await next()) : text
 }
 const expect = async expectedText => {
-  console.log({ expectedText })
   const text = await next()
+  console.debug(text)
   eq(text, expectedText, 'unexpected remote console reply')
 }
 

@@ -1,0 +1,1160 @@
+{
+  "account": {
+    "create": [
+      "Syntax: .account create $account $password",
+      "Create account and set password to it."
+    ],
+    "delete": [
+      "Syntax: .account delete $account",
+      "Delete account with all characters."
+    ],
+    "lock": {
+      "create": [
+        "### USAGE: .account lock ...",
+        "Possible subcommands:",
+        "|- account lock country",
+        "|- account lock ip"
+      ],
+      "delete": [
+        "### USAGE: .account lock ...",
+        "Possible subcommands:",
+        "|- account lock country",
+        "|- account lock ip"
+      ],
+      "lock": [
+        "### USAGE: .account lock ...",
+        "Possible subcommands:",
+        "|- account lock country",
+        "|- account lock ip"
+      ],
+      "onlinelist": [
+        "### USAGE: .account lock ...",
+        "Possible subcommands:",
+        "|- account lock country",
+        "|- account lock ip"
+      ],
+      "remove": [
+        "### USAGE: .account lock ...",
+        "Possible subcommands:",
+        "|- account lock country",
+        "|- account lock ip"
+      ],
+      "set": [
+        "### USAGE: .account lock ...",
+        "Possible subcommands:",
+        "|- account lock country",
+        "|- account lock ip"
+      ]
+    },
+    "onlinelist": ["No online players."],
+    "remove": {
+      "create": [
+        "### USAGE: .account remove ...",
+        "Possible subcommands:",
+        "|- account remove country"
+      ],
+      "delete": [
+        "### USAGE: .account remove ...",
+        "Possible subcommands:",
+        "|- account remove country"
+      ],
+      "lock": [
+        "### USAGE: .account remove ...",
+        "Possible subcommands:",
+        "|- account remove country"
+      ],
+      "onlinelist": [
+        "### USAGE: .account remove ...",
+        "Possible subcommands:",
+        "|- account remove country"
+      ],
+      "remove": [
+        "### USAGE: .account remove ...",
+        "Possible subcommands:",
+        "|- account remove country"
+      ],
+      "set": [
+        "### USAGE: .account remove ...",
+        "Possible subcommands:",
+        "|- account remove country"
+      ]
+    },
+    "set": {
+      "create": [
+        "### USAGE: .account set ...",
+        "Possible subcommands:",
+        "|- account set 2fa",
+        "|- account set addon",
+        "|- account set email",
+        "|- account set gmlevel",
+        "|- account set password"
+      ],
+      "delete": [
+        "### USAGE: .account set ...",
+        "Possible subcommands:",
+        "|- account set 2fa",
+        "|- account set addon",
+        "|- account set email",
+        "|- account set gmlevel",
+        "|- account set password"
+      ],
+      "lock": [
+        "### USAGE: .account set ...",
+        "Possible subcommands:",
+        "|- account set 2fa",
+        "|- account set addon",
+        "|- account set email",
+        "|- account set gmlevel",
+        "|- account set password"
+      ],
+      "onlinelist": [
+        "### USAGE: .account set ...",
+        "Possible subcommands:",
+        "|- account set 2fa",
+        "|- account set addon",
+        "|- account set email",
+        "|- account set gmlevel",
+        "|- account set password"
+      ],
+      "remove": [
+        "### USAGE: .account set ...",
+        "Possible subcommands:",
+        "|- account set 2fa",
+        "|- account set addon",
+        "|- account set email",
+        "|- account set gmlevel",
+        "|- account set password"
+      ],
+      "set": [
+        "### USAGE: .account set ...",
+        "Possible subcommands:",
+        "|- account set 2fa",
+        "|- account set addon",
+        "|- account set email",
+        "|- account set gmlevel",
+        "|- account set password"
+      ]
+    }
+  },
+  "achievement": { "checkall": ["Player not found!"] },
+  "additem": {},
+  "announce": {},
+  "arena": {
+    "create": [
+      "Syntax: .arena create $name \"arena name\" #type\n\nA command to create a new Arena-team in game. #type  = [2/3/5]"
+    ],
+    "disband": [
+      "Syntax: .arena disband #TeamID\n\nA command to disband Arena-team in game."
+    ],
+    "info": [
+      "Syntax: .arena info #TeamID\n\nA command that show info about arena team"
+    ],
+    "rename": [
+      "Syntax: .arena rename \"oldname\" \"newname\"\n\nA command to rename Arena-team name."
+    ]
+  },
+  "ban": {
+    "account": [
+      "Syntax: .ban account $Name $bantime $reason",
+      "Ban account kick player.",
+      "$bantime: negative value leads to permban, otherwise use a timestring like \"4d20h3s\"."
+    ],
+    "character": [
+      "Syntax: .ban character $Name $bantime $reason\nBan character and kick player.\n$bantime: negative value leads to permban, otherwise use a timestring like \"4d20h3s\"."
+    ],
+    "ip": [
+      "Syntax: .ban ip $Ip $bantime $reason",
+      "Ban IP.",
+      "$bantime: negative value leads to permban, otherwise use a timestring like \"4d20h3s\"."
+    ],
+    "playeraccount": [
+      "Syntax: .ban playeraccount $Name $bantime $reason\nBan account and kick player.\n$bantime: negative value leads to permban, otherwise use a timestring like \"4d20h3s\"."
+    ]
+  },
+  "baninfo": {
+    "account": [
+      "Syntax: .baninfo account $accountid",
+      "Watch full information about a specific ban."
+    ],
+    "character": [
+      "Syntax: .baninfo character $charactername",
+      "Watch full information about a specific ban."
+    ],
+    "ip": [
+      "Syntax: .baninfo ip $ip",
+      "Watch full information about a specific ban."
+    ]
+  },
+  "banlist": {
+    "account": ["There is no matching account."],
+    "character": [
+      "Syntax: .banlist character $Name",
+      "Searches the banlist for a character name pattern. Pattern required."
+    ],
+    "ip": ["There is no matching IPban."]
+  },
+  "cache": {
+    "delete": ["Player not found!"],
+    "info": ["Player not found!"],
+    "refresh": ["Player not found!"]
+  },
+  "character": {
+    "changeaccount": [
+      "Syntax: .character changeaccount $NewAccountName $Name.\nMoves the specified character to the provided account. \nKicks the player if the character is online."
+    ],
+    "changefaction": [
+      "Syntax: .character changefaction $name",
+      "Change character faction."
+    ],
+    "changerace": [
+      "Syntax: .character changerace $name",
+      "Change character race."
+    ],
+    "check": {
+      "changeaccount": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "changefaction": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "changerace": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "check": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "customize": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "deleted": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "erase": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "level": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "rename": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "reputation": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ],
+      "titles": [
+        "### USAGE: .character check ...",
+        "Possible subcommands:",
+        "|- character check bag",
+        "|- character check bank",
+        "|- character check profession"
+      ]
+    },
+    "customize": [
+      "Syntax: .character customize [$name]",
+      "Mark selected in game or by $name in command character for customize at next login."
+    ],
+    "deleted": {
+      "changeaccount": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "changefaction": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "changerace": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "check": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "customize": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "deleted": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "erase": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "level": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "rename": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "reputation": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ],
+      "titles": [
+        "### USAGE: .character deleted ...",
+        "Possible subcommands:",
+        "|- character deleted delete",
+        "|- character deleted list",
+        "|- character deleted purge",
+        "|- character deleted restore"
+      ]
+    },
+    "erase": [
+      "Syntax: .character erase $name",
+      "Delete character $name. Character finally deleted in case any deleting options."
+    ],
+    "level": [
+      "Syntax: .character level [$playername] [#level]",
+      "Set the level of character with $playername (or the selected if not name provided) by #numberoflevels Or +1 if no #numberoflevels provided). If #numberoflevels is omitted, the level will be increase by 1. If #numberoflevels is 0, the same level will be restarted. If no character is selected and name not provided, increase your level. Command can be used for offline character. All stats and dependent values recalculated. At level decrease talents can be reset if need. Also at level decrease equipped items with greater level requirement can be lost."
+    ],
+    "rename": [
+      "Syntax: .character rename [$name] [reserveName] [$newName]",
+      "Mark selected in game or by $name in command character for rename at next login.",
+      "If [reserveName] is 1 then the player's current name is added to the list of reserved names.",
+      "If [newName] then the player will be forced rename."
+    ],
+    "reputation": ["Player not found!"],
+    "titles": ["Player not found!"]
+  },
+  "combatstop": {},
+  "commands": {},
+  "debug": {
+    "objectcount": [
+      "Map Id: 0 Name: 'Eastern Kingdoms' Instance Id: 0 Creatures: 2317 GameObjects: 1193 SetActive Objects: 4",
+      "Top Creatures count:",
+      "Entry: 1548 Count: 106",
+      "Entry: 1554 Count: 100",
+      "Entry: 1553 Count: 87",
+      "Entry: 31576 Count: 83",
+      "Entry: 4075 Count: 60",
+      "Map Id: 530 Name: 'Outland' Instance Id: 0 Creatures: 337 GameObjects: 257 SetActive Objects: 0",
+      "Top Creatures count:",
+      "Entry: 17202 Count: 24",
+      "Entry: 17201 Count: 22",
+      "Entry: 16733 Count: 17",
+      "Entry: 17184 Count: 16",
+      "Entry: 17216 Count: 15",
+      "Map Id: 571 Name: 'Northrend' Instance Id: 0 Creatures: 9427 GameObjects: 2666 SetActive Objects: 196",
+      "Top Creatures count:",
+      "Entry: 31812 Count: 307",
+      "Entry: 23690 Count: 262",
+      "Entry: 24791 Count: 248",
+      "Entry: 23974 Count: 192",
+      "Entry: 23691 Count: 183",
+      "Map Id: 1 Name: 'Kalimdor' Instance Id: 0 Creatures: 4461 GameObjects: 1221 SetActive Objects: 12",
+      "Top Creatures count:",
+      "Entry: 3100 Count: 126",
+      "Entry: 3255 Count: 122",
+      "Entry: 3242 Count: 118",
+      "Entry: 3246 Count: 116",
+      "Entry: 2959 Count: 111"
+    ]
+  },
+  "deserter": {},
+  "disable": {
+    "add": {
+      "add": [
+        "### USAGE: .disable add ...",
+        "Possible subcommands:",
+        "|- disable add battleground",
+        "|- disable add map",
+        "|- disable add outdoorpvp",
+        "|- disable add quest",
+        "|- disable add spell",
+        "|- disable add vmap"
+      ],
+      "remove": [
+        "### USAGE: .disable add ...",
+        "Possible subcommands:",
+        "|- disable add battleground",
+        "|- disable add map",
+        "|- disable add outdoorpvp",
+        "|- disable add quest",
+        "|- disable add spell",
+        "|- disable add vmap"
+      ]
+    },
+    "remove": {
+      "add": [
+        "### USAGE: .disable remove ...",
+        "Possible subcommands:",
+        "|- disable remove battleground",
+        "|- disable remove map",
+        "|- disable remove outdoorpvp",
+        "|- disable remove quest",
+        "|- disable remove spell",
+        "|- disable remove vmap"
+      ],
+      "remove": [
+        "### USAGE: .disable remove ...",
+        "Possible subcommands:",
+        "|- disable remove battleground",
+        "|- disable remove map",
+        "|- disable remove outdoorpvp",
+        "|- disable remove quest",
+        "|- disable remove spell",
+        "|- disable remove vmap"
+      ]
+    }
+  },
+  "event": {
+    "activelist": [
+      "12 - Hallow's End  [active]",
+      "16 - Gurubashi Arena Booty Run  [active]",
+      "25 - Pyrewood Village  [active]",
+      "30 - Edge of Madness, Wushoolay  [active]",
+      "34 - Brew of the Month October  [active]",
+      "60 - Arena Season 8  [active]",
+      "88 - Evening  [active]",
+      "89 - Leprithus  [active]"
+    ],
+    "info": [
+      "### USAGE: .event info ...",
+      "There is no detailed usage information associated with 'event info'.\nThis should never occur for stock AzerothCore commands - if it does, report this as a bug."
+    ],
+    "start": [
+      "Syntax: .event start #event_id",
+      "Start event #event_id. Set start time for event to current moment (change not saved in DB)."
+    ],
+    "stop": [
+      "Syntax: .event stop #event_id",
+      "Stop event #event_id. Set start time for event to time in past that make current moment is event stop time (change not saved in DB)."
+    ]
+  },
+  "flusharenapoints": {},
+  "gm": {
+    "ingame": ["There are no GMs currently logged in on this server."],
+    "list": [
+      "Current gamemasters:",
+      "========================",
+      "|5 KIGIRI|   4  |",
+      "|5 TEST1|   5  |",
+      "|5 TEST2|   5  |",
+      "========================"
+    ]
+  },
+  "gmannounce": {},
+  "gmnameannounce": {},
+  "gmnotify": {},
+  "group": {
+    "list": [
+      "Syntax: .group list [$CharacterName]",
+      "Lists all the members of the group/party the player is in."
+    ]
+  },
+  "guild": {
+    "create": [
+      "Syntax: .guild create [$GuildLeaderName] \"$GuildName\"",
+      "Create a guild named $GuildName with the player $GuildLeaderName (or selected) as leader.  Guild name must in quotes."
+    ],
+    "delete": [
+      "Syntax: .guild delete \"$GuildName\"",
+      "Delete guild $GuildName. Guild name must in quotes."
+    ],
+    "info": [
+      "Shows information about the target's guild or a given Guild Id or Name."
+    ],
+    "invite": [
+      "Syntax: .guild invite [$CharacterName] \"$GuildName\"",
+      "Add player $CharacterName (or selected) into a guild $GuildName. Guild name must in quotes."
+    ],
+    "rank": [
+      "Syntax: .guild rank [$CharacterName] #Rank",
+      "Set for player $CharacterName (or selected) rank #Rank in a guild."
+    ],
+    "rename": [
+      "Syntax: .guild rename \"$GuildName\" \"$NewGuildName\" \n\n Rename a guild named $GuildName with $NewGuildName. Guild name and new guild name must in quotes."
+    ],
+    "uninvite": [
+      "Syntax: .guild uninvite [$CharacterName]",
+      "Remove player $CharacterName (or selected) from a guild."
+    ]
+  },
+  "help": {},
+  "instance": {
+    "getbossstate": [
+      "Syntax: .instance getbossstate $bossId [$Name]",
+      "Gets the current EncounterState for the provided boss id.",
+      "If no character name is provided, the current map will be used as target."
+    ],
+    "setbossstate": [
+      "Syntax: .instance setbossstate $bossId $encounterState [$Name]",
+      "Sets the EncounterState for the given boss id to a new value. EncounterStates range from 0 to 5.",
+      "If no character name is provided, the current map will be used as target."
+    ],
+    "stats": [
+      "instances loaded: dungeons (0), battlegrounds (0), arenas (0)",
+      "players in instances: dungeons (0), battlegrounds (0), arenas (0 + 0 spect)"
+    ]
+  },
+  "item": {
+    "move": [
+      "Syntax: .itemmove #sourceslotid #destinationslotid",
+      "Move an item from slots #sourceslotid to #destinationslotid in your inventory",
+      "Not yet implemented"
+    ],
+    "refund": [
+      "Syntax: .item refund <name> <item> <extendedCost> \nRemoves the item and restores honor/arena/items according to extended cost."
+    ],
+    "restore": {
+      "move": ["Value 'move' is not valid for type unsigned int."],
+      "refund": ["Value 'refund' is not valid for type unsigned int."],
+      "restore": ["Value 'restore' is not valid for type unsigned int."]
+    }
+  },
+  "kick": {},
+  "lfg": {
+    "clean": ["Queues cleared"],
+    "options": ["Lfg options: 5"],
+    "queue": []
+  },
+  "list": {
+    "creature": [
+      "Syntax: .list creature #creature_id [#max_count]",
+      "Output creatures with creature id #creature_id found in world. Output creature guids and coordinates sorted by distance from character. Will be output maximum #max_count creatures. If #max_count not provided use 10 as default value."
+    ],
+    "item": [
+      "Syntax: .list item #item_id [#max_count]",
+      "Output items with item id #item_id found in all character inventories, mails, auctions, and guild banks. Output item guids, item owner guid, owner account and owner name (guild name and guid in case guild bank). Will be output maximum #max_count items. If #max_count not provided use 10 as default value."
+    ],
+    "object": [
+      "[DEPRECATED]: use \".list gobject\" instead.",
+      "Syntax: .go object #object_guid",
+      "Teleport your character to gameobject with guid #object_guid"
+    ]
+  },
+  "lookup": {},
+  "mute": {},
+  "mutehistory": {},
+  "nameannounce": {},
+  "notify": {},
+  "pdump": {
+    "load": [
+      "Syntax: .pdump load $filename $account [$newname] [$newguid]",
+      "Load character dump from dump file into character list of $account with saved or $newname, with saved (or first free) or $newguid guid."
+    ],
+    "write": [
+      "Syntax: .pdump write $filename $playerNameOrGUID",
+      "Write character dump with name/guid $playerNameOrGUID to file $filename."
+    ]
+  },
+  "pinfo": {},
+  "player": {
+    "learn": ["Syntax: .player learn #playername #spell [all]."],
+    "unlearn": ["Syntax: .player unlearn #playername #spell [all]."]
+  },
+  "quest": {
+    "add": [
+      "Syntax: .quest add #quest_id",
+      "Add to character quest log quest #quest_id. Quest started from item can't be added by this command but correct .additem call provided in command output."
+    ],
+    "complete": [
+      "Syntax: .quest complete #questid",
+      "Mark all quest objectives as completed for target character active quest. After this target character can go and get quest reward."
+    ],
+    "remove": [
+      "Syntax: .quest remove #quest_id",
+      "Set quest #quest_id state to not completed and not active (and remove from active quest list) for selected player."
+    ],
+    "reward": [
+      "Syntax: .quest reward #questId\n\nGrants quest reward to selected player and removes quest from his log (quest must be in completed state)."
+    ]
+  },
+  "reload": {},
+  "reset": {
+    "achievements": [
+      "Syntax: .reset achievements [$playername]",
+      "Reset achievements data for selected or named (online or offline) character. Achievements for persistance progress data like completed quests/etc re-filled at reset. Achievements for events like kills/casts/etc will lost."
+    ],
+    "all": [
+      "Syntax: .reset all spells",
+      "Syntax: .reset all talents",
+      "Request reset spells or talents (including talents for all character's pets if any) at next login each existed character."
+    ],
+    "honor": [
+      "Syntax: .reset honor [Playername]",
+      "Reset all honor data for targeted character."
+    ],
+    "items": {
+      "achievements": [
+        "### USAGE: .reset items ...",
+        "Possible subcommands:",
+        "|- reset items all",
+        "|- reset items allbags",
+        "|- reset items bags",
+        "|- reset items bank",
+        "|- reset items currency",
+        "|- reset items equipped",
+        "|- reset items keyring",
+        "|- reset items vendor_buyback"
+      ],
+      "all": [
+        "No character selected.",
+        "Syntax : .reset items all #playername\nDelete all items in the selected player's inventory (equipped, in bags, in bank, in keyring, in currency list and in vendor buy back tab).\n#playername : Optional target player name (if player is online only). If not provided the command will execute on the selected target player."
+      ],
+      "honor": [
+        "### USAGE: .reset items ...",
+        "Possible subcommands:",
+        "|- reset items all",
+        "|- reset items allbags",
+        "|- reset items bags",
+        "|- reset items bank",
+        "|- reset items currency",
+        "|- reset items equipped",
+        "|- reset items keyring",
+        "|- reset items vendor_buyback"
+      ],
+      "items": [
+        "### USAGE: .reset items ...",
+        "Possible subcommands:",
+        "|- reset items all",
+        "|- reset items allbags",
+        "|- reset items bags",
+        "|- reset items bank",
+        "|- reset items currency",
+        "|- reset items equipped",
+        "|- reset items keyring",
+        "|- reset items vendor_buyback"
+      ],
+      "level": [
+        "### USAGE: .reset items ...",
+        "Possible subcommands:",
+        "|- reset items all",
+        "|- reset items allbags",
+        "|- reset items bags",
+        "|- reset items bank",
+        "|- reset items currency",
+        "|- reset items equipped",
+        "|- reset items keyring",
+        "|- reset items vendor_buyback"
+      ],
+      "spells": [
+        "### USAGE: .reset items ...",
+        "Possible subcommands:",
+        "|- reset items all",
+        "|- reset items allbags",
+        "|- reset items bags",
+        "|- reset items bank",
+        "|- reset items currency",
+        "|- reset items equipped",
+        "|- reset items keyring",
+        "|- reset items vendor_buyback"
+      ],
+      "stats": [
+        "### USAGE: .reset items ...",
+        "Possible subcommands:",
+        "|- reset items all",
+        "|- reset items allbags",
+        "|- reset items bags",
+        "|- reset items bank",
+        "|- reset items currency",
+        "|- reset items equipped",
+        "|- reset items keyring",
+        "|- reset items vendor_buyback"
+      ],
+      "talents": [
+        "### USAGE: .reset items ...",
+        "Possible subcommands:",
+        "|- reset items all",
+        "|- reset items allbags",
+        "|- reset items bags",
+        "|- reset items bank",
+        "|- reset items currency",
+        "|- reset items equipped",
+        "|- reset items keyring",
+        "|- reset items vendor_buyback"
+      ]
+    },
+    "level": [
+      "Syntax: .reset level [Playername]",
+      "Reset level to 1 including reset stats and talents.  Equipped items with greater level requirement can be lost."
+    ],
+    "spells": [
+      "Syntax: .reset spells [Playername]",
+      "Removes all non-original spells from spellbook.",
+      ". Playername can be name of offline character."
+    ],
+    "stats": [
+      "Syntax: .reset stats [Playername]",
+      "Resets(recalculate) all stats of the targeted player to their original VALUESat current level."
+    ],
+    "talents": ["No character selected."]
+  },
+  "revive": {},
+  "saveall": {},
+  "send": {
+    "items": [
+      "Syntax: .send items #playername \"#subject\" \"#text\" itemid1[:count1] itemid2[:count2] ... itemidN[:countN]",
+      "Send a mail to a player. Subject and mail text must be in \"\". If for itemid not provided related count values then expected 1, if count > max items in stack then items will be send in required amount stacks. All stacks amount in mail limited to 12."
+    ],
+    "mail": [
+      "Syntax: .send mail #playername \"#subject\" \"#text\"",
+      "Send a mail to a player. Subject and mail text must be in \"\"."
+    ],
+    "message": [
+      "Syntax: .send message $playername $message",
+      "Send screen message to player from ADMINISTRATOR."
+    ],
+    "money": [
+      "Syntax: .send money #playername \"#subject\" \"#text\" #money",
+      "Send mail with money to a player. Subject and mail text must be in \"\"."
+    ]
+  },
+  "server": {
+    "corpses": [],
+    "debug": [
+      "AzerothCore rev. 2269344dcee1+ 2024-10-20 17:19:55 +0200 (master branch) (Unix, Release, Static)",
+      "Connected players: 0. Characters in world: 0.",
+      "Connection peak: 0.",
+      "Server uptime: 15 minute(s) 10 second(s)",
+      "Update time diff: 1ms. Last 500 diffs summary:",
+      "|- Mean: 2ms",
+      "|- Median: 1ms",
+      "|- Percentiles (95, 99, max): 8ms, 8ms, 9ms",
+      "Using SSL version: OpenSSL 3.0.2 15 Mar 2022 (library: OpenSSL 3.0.2 15 Mar 2022)",
+      "Using Boost version: 1.74.0",
+      "Using CMake version: 3.16.3",
+      "Using MySQL version: 80040",
+      "Found MySQL Executable: /usr/bin/mysql",
+      "Compiled on: Linux 5.4.0-124-generic",
+      "Worldserver listening connections on port %u",
+      "Realmlist (Realm Id: 1) configured in port 8085",
+      "VMAPs status: Enabled. LineOfSight: true, getHeight: true, indoorCheck: true",
+      "MMAPs status: Enabled",
+      "maps directory located in ./maps. Total size: 291014951 bytes",
+      "vmaps directory located in ./vmaps. Total size: 658130721 bytes",
+      "mmaps directory located in ./mmaps. Total size: 2192910844 bytes",
+      "Default DBC locale: enUS.\nAll available DBC locales: enUS",
+      "Using World DB: ACDB 335.12-dev",
+      "Latest LoginDatabase update: 2024_01_20_00.sql",
+      "Latest CharacterDatabase update: Solocraft.sql",
+      "Latest WorldDatabase update: 2024_10_19_00.sql",
+      "LoginDatabase queue size: 0",
+      "CharacterDatabase queue size: 0",
+      "WorldDatabase queue size: 0",
+      "No modules are enabled"
+    ],
+    "idlerestart": {
+      "corpses": ["Incorrect values."],
+      "debug": ["Incorrect values."],
+      "exit": ["Incorrect values."],
+      "idlerestart": ["Incorrect values."],
+      "idleshutdown": ["Incorrect values."],
+      "info": ["Incorrect values."],
+      "motd": ["Incorrect values."],
+      "restart": ["Incorrect values."],
+      "set": ["Incorrect values."],
+      "shutdown": ["Incorrect values."]
+    },
+    "idleshutdown": {
+      "corpses": ["Incorrect values."],
+      "debug": ["Incorrect values."],
+      "exit": ["Incorrect values."],
+      "idlerestart": ["Incorrect values."],
+      "idleshutdown": ["Incorrect values."],
+      "info": ["Incorrect values."],
+      "motd": ["Incorrect values."],
+      "restart": ["Incorrect values."],
+      "set": ["Incorrect values."],
+      "shutdown": ["Incorrect values."]
+    },
+    "info": [
+      "AzerothCore rev. 2269344dcee1+ 2024-10-20 17:19:55 +0200 (master branch) (Unix, Release, Static)",
+      "Connected players: 0. Characters in world: 0.",
+      "Connection peak: 0.",
+      "Server uptime: 15 minute(s) 12 second(s)",
+      "Update time diff: 1ms. Last 500 diffs summary:",
+      "|- Mean: 2ms",
+      "|- Median: 1ms",
+      "|- Percentiles (95, 99, max): 7ms, 8ms, 11ms"
+    ],
+    "motd": [
+      "Current Message of the day:",
+      "Welcome to an AzerothCore server.\n|cffFF4A2DThis server runs on AzerothCore|r |cff3CE7FFwww.azerothcore.org|r"
+    ],
+    "restart": {
+      "corpses": ["Incorrect values."],
+      "debug": ["Incorrect values."],
+      "exit": ["Incorrect values."],
+      "idlerestart": ["Incorrect values."],
+      "idleshutdown": ["Incorrect values."],
+      "info": ["Incorrect values."],
+      "motd": ["Incorrect values."],
+      "restart": ["Incorrect values."],
+      "set": ["Incorrect values."],
+      "shutdown": ["Incorrect values."]
+    },
+    "set": {
+      "corpses": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ],
+      "debug": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ],
+      "exit": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ],
+      "idlerestart": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ],
+      "idleshutdown": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ],
+      "info": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ],
+      "motd": [
+        "Syntax: .server set motd Optional($realmId) $MOTD",
+        "Set server Message of the day for the specified $realmId.",
+        "If $realmId is not provided it will update for the current realm.",
+        "Use $realmId -1 to set motd for all realms."
+      ],
+      "restart": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ],
+      "set": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ],
+      "shutdown": [
+        "### USAGE: .server set ...",
+        "Possible subcommands:",
+        "|- server set closed",
+        "|- server set loglevel",
+        "|- server set motd"
+      ]
+    },
+    "shutdown": {
+      "corpses": ["Incorrect values."],
+      "debug": ["Incorrect values."],
+      "exit": ["Incorrect values."],
+      "idlerestart": ["Incorrect values."],
+      "idleshutdown": ["Incorrect values."],
+      "info": ["Incorrect values."],
+      "motd": ["Incorrect values."],
+      "restart": ["Incorrect values."],
+      "set": ["Incorrect values."],
+      "shutdown": ["Incorrect values."]
+    }
+  },
+  "teleport": {
+    "del": [
+      "Syntax: .teleport del $name",
+      "Remove location with name $name for .teleport command locations list."
+    ],
+    "name": {
+      "del": [
+        "Syntax: .teleport name [#playername] #location",
+        "Teleport the given character to a given location. Character can be offline.",
+        "To teleport to homebind, set #location to \"$home\" (without quotes).",
+        "Possible subcommands:",
+        "|- teleport name npc ..."
+      ],
+      "name": [
+        "Syntax: .teleport name [#playername] #location",
+        "Teleport the given character to a given location. Character can be offline.",
+        "To teleport to homebind, set #location to \"$home\" (without quotes).",
+        "Possible subcommands:",
+        "|- teleport name npc ..."
+      ]
+    }
+  },
+  "ticket": {
+    "assign": [
+      "Usage: .ticket assign $ticketid $gmname.",
+      "Assigns the specified ticket to the specified Game Master."
+    ],
+    "close": [
+      "Usage: .ticket close $ticketid.",
+      "Closes the specified ticket. Does not delete permanently."
+    ],
+    "closedlist": ["Showing list of closed tickets."],
+    "comment": [
+      "Usage: .ticket comment $ticketid $comment.",
+      "Allows the adding or modifying of a comment to the specified ticket."
+    ],
+    "complete": [
+      "Syntax: .ticket complete #ticketID\nMark a ticket of the given ID as complete."
+    ],
+    "delete": [
+      "Usage: .ticket delete $ticketid.",
+      "Deletes the specified ticket permanently. Ticket must be closed first."
+    ],
+    "escalate": [
+      "Syntax: .ticket escalate #ticketID\nAdd a ticket of the given ID to the escalation queue."
+    ],
+    "escalatedlist": ["<error>"],
+    "list": ["Showing list of open tickets."],
+    "onlinelist": ["Showing list of open tickets whose creator is online."],
+    "reset": [
+      "All closed tickets were deleted and counter is reseted to |cffff00ff 1|r"
+    ],
+    "response": {
+      "assign": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "close": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "closedlist": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "comment": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "complete": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "delete": [
+        "Delete a ticket response\n\nSyntax: ticket response delete $ticketId"
+      ],
+      "escalate": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "escalatedlist": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "list": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "onlinelist": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "reset": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "response": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "togglesystem": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "unassign": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "viewid": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ],
+      "viewname": [
+        "### USAGE: .ticket response ...",
+        "Possible subcommands:",
+        "|- ticket response append",
+        "|- ticket response appendln",
+        "|- ticket response delete",
+        "|- ticket response show"
+      ]
+    },
+    "togglesystem": ["Sending tickets is not allowed."],
+    "unassign": [
+      "Usage: .ticket unassign $ticketid.",
+      "Unassigns the specified ticket from the current assigned Game Master."
+    ],
+    "viewid": [
+      "Usage: .ticket viewid $ticketid.",
+      "Returns details about specified ticket. Ticket must be open and not deleted."
+    ],
+    "viewname": [
+      "Usage: .ticket viewname $creatorname.",
+      "Returns details about specified ticket. Ticket must be open and not deleted."
+    ]
+  },
+  "unban": {
+    "account": [
+      "Syntax: .unban account $Name",
+      "Unban accounts for account name pattern."
+    ],
+    "character": [
+      "Syntax: .unban character $Name",
+      "Unban accounts for character name pattern."
+    ],
+    "ip": ["Syntax : .unban ip $Ip", "Unban accounts for IP pattern."],
+    "playeraccount": [
+      "Syntax: .unban playeraccount #name\nUnban accounts for character name pattern."
+    ]
+  }
+}
