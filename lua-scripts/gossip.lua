@@ -1,3 +1,5 @@
+print("gossip.lua loading starting...")
+
 local NPCS = {
   [12345] = {
     ["Option 1: Say Hello"] = {
@@ -100,3 +102,5 @@ for npc_id, gossips in pairs(NPCS) do
     end
   end)
 end
+
+print("gossip.lua loaded successfull.")
