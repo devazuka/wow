@@ -33,6 +33,8 @@ local function BuildMenu(accumulator, menus)
     if type(options) == 'table' then
       menus.menu = true
       options.intid = #accumulator + 1
+      options.msg = key
+      print(""..options.intid..": "..key)
       accumulator[options.intid] = options
       BuildMenu(accumulator, options)
     end
@@ -40,7 +42,8 @@ local function BuildMenu(accumulator, menus)
 end
 
 local function AddGossipNpc(npc_id, gossips)
-  local menu = BuildMenu({}, gossips)
+  local menu = {}
+  BuildMenu(menu, gossips)
   RegisterCreatureGossipEvent(npc_id, ON_HELLO, function (event, player, creature)
     ShowGossipMenu(player, creature, menu, 1)
   end)
@@ -102,4 +105,6 @@ AddGossipNpc(1756, {
   },
 })
 
+-- .reload creature_template 1756
+-- UPDATE creature_template SET npcflag = npcflag | 1 WHERE entry = 1756;
 print("gossip.lua loaded successfull.")
