@@ -175,7 +175,7 @@ function EncodeValue(value)
     return tostring(value)
   end
   if type(value) == 'string' then
-    return "'"..WorldDBEscapeString(value).."'"
+    return "'"..value:gsub("\\", "\\\\"):gsub("'", "''").."'"
   end
   if type(value) == 'boolean' then
     return value and "TRUE" or "FALSE"
@@ -187,36 +187,25 @@ function SendWebEvent(type, player, data)
   if player then
     data = data or {}
     data.player = data.player or {}
-    data.player.id = player:GetId()
+    data.player.id = player:GetGUIDLow()
     data.player.name = player:GetName()
     data.player.account = player:GetAccountName()
     data.player.class = player:GetClass()
     data.player.race = player:GetRace()
   end
-  print(type ..": "..EncodeValue(data))
   WorldDBExecute("INSERT INTO web.event (type, data) VALUES ('"..type.."', "..EncodeValue(data)..")")
 end
 
--- Event
-RegisterPlayerEvent(PLAYER_EVENT_ON_LOGIN, function (event, player)
-  print(player:GetName().." logged in!")
-  player:JoinChannel("discord")
-end)
-
 RegisterPlayerEvent(PLAYER_EVENT_ON_CHANNEL_CHAT, function(event, player, msg, Type, lang, channel)
-  local channelName = player:GetChannelNameById(channel)
-  print("["..channelName.."]["..player:GetName().."]: "..msg)
-  if channelName == "discord" then
+  if channel == 1 then
     -- Send message to players of both factions in the channel
     for _, targetPlayer in pairs(GetPlayersInWorld()) do
-      if targetPlayer:IsInChannel("discord") then
-        targetPlayer:SendBroadcastMessage("|cFF00FF00[discord] |r" .. player:GetName() .. ": " .. msg)
-      end
+      targetPlayer:SendBroadcastMessage("|cFF668800[general] |r" .. player:GetName() .. ": " .. msg)
     end
-
-    SendWebEvent('DISCORD_CHANNEL_MESSAGE', player, { message = msg })
+    SendWebEvent('GENERAL_CHANNEL_MESSAGE', player, { message = msg })
     return false -- Prevents the message from duplicating in the original chat
   end
+  --]]
 end)
 
 local elapsed = 500
