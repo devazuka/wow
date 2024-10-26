@@ -1,53 +1,5 @@
 print("gossip.lua loading starting...")
 
-local NPCS = {
-  [12345] = {
-    ["Option 1: Say Hello"] = {
-      -- icon = 0, Chat Bubble (default)
-      --        1 Vendor
-      --        2 Taxi
-      --        3 Trainer
-      --        4 Interact Book
-      --        5 Bind Stone
-      --        6 Battle
-      --        7 Mailbox
-      --        8 Gossip Note
-      --        9 Quest (Yellow Exclamation)
-      --       10 Quest (Yellow Question)
-      --       11 Quest (Blue Question)
-      --       12 Quest (Blue Exclamation)
-      -- code = false, -- prompt an input to the player to enter a code
-      -- popup = nil,  -- message to show
-      -- money = 0,    -- amount to pay
-      handler = function (player)
-        player:SendBroadcastMessage("Hello, Adventurer!")
-      end
-    }
-    ["Option 2: Get a Buff"] = {
-      handler = function (player) player:AddAura(467, player) end
-    }
-    ["Option 3: Teleport Me"] = {
-      handler = function (player)
-        player:Teleport(0, -8913.23, -132.47, 83.53, 0)
-      end
-    }
-    ["Option 4: more options"] = {
-      ["Option 1: Say Hello again"] = {
-        handler = function (player)
-          player:SendBroadcastMessage("Hello, Adventurer!")
-        end
-      }
-      ["Option 2: Get another Buff"] = {
-        handler = function (player) player:AddAura(467, player) end
-      }
-      ["Option 3: Teleport Me more"] = {
-        handler = function (player)
-          player:Teleport(0, -8913.23, -132.47, 83.53, 0)
-        end
-      }
-    }
-  }
-}
 -- local BgEvents
 -- ON_START = 1,
 -- ON_END = 2,
@@ -87,7 +39,7 @@ local function BuildMenu(accumulator, menus)
   end
 end
 
-for npc_id, gossips in pairs(NPCS) do
+local function AddGossipNpc(npc_id, gossips)
   local menu = BuildMenu({}, gossips)
   RegisterCreatureGossipEvent(npc_id, ON_HELLO, function (event, player, creature)
     ShowGossipMenu(player, creature, menu, 1)
@@ -102,5 +54,52 @@ for npc_id, gossips in pairs(NPCS) do
     end
   end)
 end
+
+AddGossipNpc(12345, {
+  ["Option 1: Say Hello"] = {
+    -- icon = 0, Chat Bubble (default)
+    --        1 Vendor
+    --        2 Taxi
+    --        3 Trainer
+    --        4 Interact Book
+    --        5 Bind Stone
+    --        6 Battle
+    --        7 Mailbox
+    --        8 Gossip Note
+    --        9 Quest (Yellow Exclamation)
+    --       10 Quest (Yellow Question)
+    --       11 Quest (Blue Question)
+    --       12 Quest (Blue Exclamation)
+    -- code = false, -- prompt an input to the player to enter a code
+    -- popup = nil,  -- message to show
+    -- money = 0,    -- amount to pay
+    handler = function (player)
+      player:SendBroadcastMessage("Hello, Adventurer!")
+    end
+  },
+  ["Option 2: Get a Buff"] = {
+    handler = function (player) player:AddAura(467, player) end
+  },
+  ["Option 3: Teleport Me"] = {
+    handler = function (player)
+      player:Teleport(0, -8913.23, -132.47, 83.53, 0)
+    end
+  },
+  ["Option 4: more options"] = {
+    ["Option 1: Say Hello again"] = {
+      handler = function (player)
+        player:SendBroadcastMessage("Hello, Adventurer!")
+      end
+    },
+    ["Option 2: Get another Buff"] = {
+      handler = function (player) player:AddAura(467, player) end
+    },
+    ["Option 3: Teleport Me more"] = {
+      handler = function (player)
+        player:Teleport(0, -8913.23, -132.47, 83.53, 0)
+      end
+    },
+  },
+})
 
 print("gossip.lua loaded successfull.")
