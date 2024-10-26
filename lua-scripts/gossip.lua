@@ -55,7 +55,7 @@ local function AddGossipNpc(npc_id, gossips)
   end)
 end
 
-AddGossipNpc(12345, {
+AddGossipNpc(1756, {
   ["Option 1: Say Hello"] = {
     -- icon = 0, Chat Bubble (default)
     --        1 Vendor
