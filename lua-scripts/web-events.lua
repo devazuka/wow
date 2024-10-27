@@ -196,13 +196,36 @@ function SendWebEvent(type, player, data)
   WorldDBExecute("INSERT INTO web.event (type, data) VALUES ('"..type.."', "..EncodeValue(data)..")")
 end
 
+local classColors = {
+  [1] = "|cFFC69B6D", -- "Warrior"
+  [2] = "|cFFF48CBA", -- Paladin
+  [3] = "|cFFAAD372", -- Hunter
+  [4] = "|cFFFFF468", -- Rogue
+  [5] = "|cFFFFFFFF", -- Priest
+  [6] = "|cFFC41E3A", -- Death Knight
+  [7] = "|cFF0070DD", -- Shaman
+  [8] = "|cFF3FC7EB", -- Mage
+  [9] = "|cFF8788EE", -- Warlock
+  [10] = "|cFF00FF98", -- Monk
+  [11] = "|cFFFF7C0A", -- Druid
+  [12] = "|cFFA330C9", -- Demon Hunter
+  [13] = "|cFF33937F", -- Evoker
+}
+
 RegisterPlayerEvent(PLAYER_EVENT_ON_CHANNEL_CHAT, function(event, player, msg, Type, lang, channel)
   if channel == 1 then
     -- Send message to players of both factions in the channel
-    for _, targetPlayer in pairs(GetPlayersInWorld()) do
-      targetPlayer:SendBroadcastMessage("[|cFFFFA500General|r]|cFFFFF5DE |TInterface\\FriendsFrame\\PlusManz-Horde:16|t" .. "[|Hplayer:" .. player:GetName() .. "|h" .. player:GetName() .. "|h]: " .. msg)
-    end
     SendWebEvent('GENERAL_CHANNEL_MESSAGE', player, { message = msg:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "") })
+    local classColor = classColors[player:GetClass()] or "|cFFFFFFFF" 
+    local name = player:GetName()
+    msg = "[|cFFFFA500General|r]|cFFFFF5DE |TInterface\\FriendsFrame\\PlusManz-"
+        ..(player:GetTeam() == 1 and "Horde" or "Alliance")
+        ..":12|t"
+        .."["..classColor.."|Hplayer:"..name.."|h"..name.."|h|r]: "
+        ..msg
+    for _, targetPlayer in pairs(GetPlayersInWorld()) do
+      targetPlayer:SendBroadcastMessage(msg)
+    end
     return false -- Prevents the message from duplicating in the original chat
   end
   --]]
