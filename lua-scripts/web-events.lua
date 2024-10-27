@@ -200,7 +200,7 @@ RegisterPlayerEvent(PLAYER_EVENT_ON_CHANNEL_CHAT, function(event, player, msg, T
   if channel == 1 then
     -- Send message to players of both factions in the channel
     for _, targetPlayer in pairs(GetPlayersInWorld()) do
-      targetPlayer:SendBroadcastMessage("[|cFFFFA500General|r]|cFFFFF5DE " .. "[|Hplayer:" .. player:GetName() .. "|h" .. player:GetName() .. "|h]: " .. msg)
+      targetPlayer:SendBroadcastMessage("[|cFFFFA500General|r]|cFFFFF5DE |TInterface\\FriendsFrame\\PlusManz-Horde:16|t" .. "[|Hplayer:" .. player:GetName() .. "|h" .. player:GetName() .. "|h]: " .. msg)
     end
     SendWebEvent('GENERAL_CHANNEL_MESSAGE', player, { message = msg:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "") })
     return false -- Prevents the message from duplicating in the original chat
