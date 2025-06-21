@@ -9,6 +9,7 @@
 
 import { Client } from "https://deno.land/x/mysql@v2.12.1/mod.ts"
 import { configLogger } from "https://deno.land/x/mysql@v2.12.1/mod.ts"
+import { red } from 'jsr:@std/fmt/colors'
 
 await configLogger({ enable: false })
 export const db = await new Client().connect({
@@ -18,9 +19,14 @@ export const db = await new Client().connect({
   password: Deno.env.get('PASSWORD'),
 })
 
-export const sql = (template, ...args) => {
+export const sql = async (template, ...args) => {
   const query = template.join('?').trim()
-  return query.slice(0, 6).toUpperCase() === 'SELECT'
-    ? db.query(query, args)
-    : db.execute(query, args)
+  try {
+    return await (query.slice(0, 6).toUpperCase() === 'SELECT'
+      ? db.query(query, args)
+      : db.execute(query, args))
+  } catch (err) {
+    console.log(red(query), args)
+    throw err
+  }
 }

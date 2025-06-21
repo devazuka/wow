@@ -21,10 +21,7 @@ const event_types = [
   'OBTAIN_ARENA_GRAND_MASTER', // { player: character_id }
   'OBTAIN_LUCKY_FISHING_HAT', // { player: character_id }
 ]
-await sql`DROP TABLE web.event;`
-
-
-
+// await sql`DROP TABLE web.event;`
 await sql`
 CREATE TABLE IF NOT EXISTS web.event (
   id    INT  PRIMARY KEY AUTO_INCREMENT,
