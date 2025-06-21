@@ -193,7 +193,6 @@ STATE.startAt = await handleInitialStateEvents()
 STATE.version = serverInfo.version
 console.timeEnd('Initialize state')
 console.log(serverInfo)
-Deno.exit()
 
 export default {
   fetch(request) {
