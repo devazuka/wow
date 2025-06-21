@@ -1,4 +1,4 @@
 #!/bin/sh
 
-/root/.deno/bin/deno serve -A web/mod.js
+/root/.deno/bin/deno serve -A  --port $PORT web/server.js
 
