@@ -1,7 +1,7 @@
 import { wowEvents, handleInitialStateEvents } from './wow-events.js'
 import './world-chat.js'
 import { ac } from './soap.js'
-import { ssh } from './shell.js'
+import { sh } from './shell.js'
 const encoder = new TextEncoder()
 
 const STATE = {
@@ -26,7 +26,7 @@ const checkServerState = async () => {
       // send the kill signal
       killRequested = true
       console.log('Server stuck, trying to kill')
-      await ssh`killall -9 worldserver`
+      await sh`killall -9 worldserver`
     }
     return
   }
