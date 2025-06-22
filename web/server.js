@@ -94,7 +94,7 @@ wowEvents.on.STARTUP(({ at }) => {
 })
 
 wowEvents.on.SHUTDOWN(({ at }) => {
-  STATE.startAt = 0
+  STATE.startAt = -at
   hasChanged = true
   emit('SHUTDOWN', { at })
 })
@@ -193,10 +193,12 @@ const routes = {
 }
 
 const serverInfo = await checkServerState()
-if (!serverInfo) throw Error('unable to reach server')
 console.time('Initialize state')
 STATE.startAt = await handleInitialStateEvents()
 console.timeEnd('Initialize state')
+if (!serverInfo) {
+  STATE.startAt = -Date.now()
+}
 console.log(serverInfo)
 
 export default {
