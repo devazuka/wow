@@ -135,7 +135,7 @@ function DisplayNewMessages(result)
       end
 
       SendWorldMessage("[|cFFFFA5001|r]"..msg:gsub("<@(%d+):([^>]+)>", ReplaceDiscordMentions))
-      AuthDBQuery("DELETE FROM discord_message WHERE id = "..tostring(id))
+      AuthDBQuery("DELETE FROM discord_message WHERE id = "..tostring(message_id))
     end
   until not result:NextRow()  
 end

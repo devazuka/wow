@@ -9,6 +9,11 @@ const STATE = {
   version: '', // ex: AzerothCore rev. e21dd803812c+ 2025-06-18 19:10:33 +0100 (master branch) (Unix, Release, Static)
   players: {}, // array of characters ({ id, name, account, race, class })
   battlegrounds: {},
+  warsongQueue: {},
+  arena2v2Queue: {},
+  arena3v3Queue: {},
+  arenaSoloQueue: {},
+  arena5v5Queue: {},
 }
 
 let killRequested = false
@@ -21,7 +26,8 @@ const checkServerState = async () => {
       hasChanged = true
     }
     setTimeout(checkServerState, 250)
-    if (!killRequested && Date.now() + STATE.startAt > 60_000) {
+    console.log('server unresponsive since', Date.now() + STATE.startAt, 'ms')
+    if (!killRequested && ((Date.now() + STATE.startAt) > 60_000)) {
       // more than 1 minute without being able to connect
       // send the kill signal
       killRequested = true
@@ -33,6 +39,7 @@ const checkServerState = async () => {
   setTimeout(checkServerState, 5000)
   killRequested = false
   const [version, ...rest] = infos.output
+  STATE.version = version
   const parsed = { version }
   for (const line of rest) {
     for (let part of line.split('.')) {
@@ -66,8 +73,16 @@ wowEvents.on.LOGIN(({ at, data: { player } }) => {
   emit('LOGIN', { player, at })
 })
 
+const removePlayerFromQueue = (playerId) => {
+  STATE.warsongQueue[playerId] && (STATE.warsongQueue[playerId] = undefined)
+  STATE.arena2v2Queue[playerId] && (STATE.arena2v2Queue[playerId] = undefined)
+  STATE.arena3v3Queue[playerId] && (STATE.arena3v3Queue[playerId] = undefined)
+  STATE.arena5v5Queue[playerId] && (STATE.arena5v5Queue[playerId] = undefined)
+}
+
 wowEvents.on.LOGOUT(({ data: { player } }) => {
   STATE.players[player.id] = undefined
+  removePlayerFromQueue(player.id)
   hasChanged = true
   emit('LOGOUT', { id: player.id })
 })
@@ -84,30 +99,21 @@ wowEvents.on.SHUTDOWN(({ at }) => {
   emit('SHUTDOWN', { at })
 })
 
+const getQueueName = (type, arena) => {
+  if (arena === 2) return 'arena2v2Queue'
+  if (arena === 3) return 'arena3v3Queue'
+  if (arena === 4) return 'arenaSoloQueue'
+  if (arena === 5) return 'arena5v5Queue'
+  if (type === 2) return 'warsongQueue'
+}
+const toQueueEntry = ({ id, at, source }) => [id, { at, source}]
+
 wowEvents.on.QUEUE_STATE(({ data: { type, arena, queue } }) => {
-  const playersInQueue = new Set()
-  let queueChange = false
-  for (const { id, at, source } of queue) {
-    const player = STATE.players[id]
-    if (!player) continue
-    playersInQueue.add(id)
-    const q = player.queue || (player.queue = {})
-    if (q[type] && q[type].at === at && q[type].source === source) continue
-    q[type] = { at, source }
-    queueChange = true
-  }
-
-  for (const player of Object.values(STATE.players)) {
-    if (playersInQueue.has(player)) continue
-    if (!player.queue?.[type]) continue
-    player.queue[type] = undefined
-    queueChange = true
-  }
-
-  if (queueChange) {
-    hasChanged = true
-    emit('QUEUE_STATE', { type, arena, queue })
-  }
+  const queueName = getQueueName(type, arena)
+  if (!STATE[queueName]) return
+  STATE[queueName] = Object.fromEntries(queue.map(toQueueEntry))
+  hasChanged = true
+  emit('QUEUE_STATE', { type, arena, queue })
 })
 
 wowEvents.on.BATTLEGROUND_JOIN(({ at, data: { id, playerId, team } }) => {
@@ -190,7 +196,6 @@ const serverInfo = await checkServerState()
 if (!serverInfo) throw Error('unable to reach server')
 console.time('Initialize state')
 STATE.startAt = await handleInitialStateEvents()
-STATE.version = serverInfo.version
 console.timeEnd('Initialize state')
 console.log(serverInfo)
 

@@ -7,8 +7,7 @@
 // GRANT ALL PRIVILEGES ON acore_world.* TO 'DB_USER';
 // GRANT ALL PRIVILEGES ON acore_characters.* TO 'DB_USER';
 
-import { Client } from "https://deno.land/x/mysql@v2.12.1/mod.ts"
-import { configLogger } from "https://deno.land/x/mysql@v2.12.1/mod.ts"
+import { Client, configLogger } from "https://deno.land/x/mysql@v2.12.1/mod.ts"
 import { red } from 'jsr:@std/fmt/colors'
 
 await configLogger({ enable: false })

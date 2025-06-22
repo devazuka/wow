@@ -96,7 +96,7 @@ async function handleNewEvents() {
 
 export async function handleInitialStateEvents() {
   const [startup] = await sql`
-    SELECT at FROM acore_auth.web_events
+    SELECT * FROM acore_auth.web_events
     WHERE type = "STARTUP"
     ORDER BY at DESC LIMIT 1
   `
@@ -105,9 +105,10 @@ export async function handleInitialStateEvents() {
     SELECT * FROM acore_auth.web_events WHERE at > ${startup.at}
   `
 
+  await handleSingleEvent(startup)
   for (const event of events) {
     await handleSingleEvent(event)
   }
   handleNewEvents()
-  return startup.at.getTime()
+  return startup.at
 }
