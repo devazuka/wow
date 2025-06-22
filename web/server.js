@@ -149,19 +149,19 @@ const STREAM_HEADERS = {
   'Cache-Control': 'no-cache',
   'Connection': 'keep-alive',
 }
-const handler = {
+const routes = {
   // TODO: Get a specific player stats
   // TODO: Get a specific battleground info
-  'GET:events': () => {
+  'GET/events': (req) => {
     if (req.headers.get('accept')?.includes('text/event-stream')) {
       return new Response(null, { status: 400 })
     }
 
-    let _controller = controller
+    let controller
     let ackInterval
     const body = new ReadableStream({
-      start(controller) {
-        _controller = controller
+      start(c) {
+        controller = c
         controller.enqueue(getInitState())
         ackInterval = setInterval(() => {
           try {
@@ -178,7 +178,7 @@ const handler = {
       },
       cancel() {
         clearInterval(ackInterval)
-        eventListeners.delete(_controller)
+        eventListeners.delete(controller)
       },
     })
 
@@ -195,11 +195,12 @@ console.timeEnd('Initialize state')
 console.log(serverInfo)
 
 export default {
-  fetch(request) {
+  fetch(req) {
     const url = new URL(req.url, 'http://localhost')
-    const key = `${request.method}/${url.pathname}`
+    const key = `${req.method}${url.pathname}`
+    console.log(key, new Date)
     const handler = routes[key]
     if (!handler) return new Response(null, { status: 404 })
-    return handler(request, url)
+    return handler(req, url)
   }
 }
