@@ -63,7 +63,7 @@ const handleSingleEvent = async event => {
       for (const fn of once) await fn(event)
       once.clear()
     }
-  }catch (err) {
+  } catch (err) {
     console.log('Unable to handle event')
     console.log(event)
     console.log(err)
@@ -78,7 +78,7 @@ async function handleNewEvents() {
   for (const event of events) {
     try {
       await sql`UPDATE acore_auth.web_events SET start=NOW(3) WHERE id=${event.id}`
-      handleSingleEvent(event)
+      await handleSingleEvent(event)
       if (purgedEvents.has(event.type)) {
         await sql`DELETE FROM acore_auth.web_events WHERE id=${event.id}`
         event.purged = true
@@ -94,8 +94,6 @@ async function handleNewEvents() {
   setTimeout(handleNewEvents, 500)
 }
 
-// handleNewEvents()
-
 export async function handleInitialStateEvents() {
   const [startup] = await sql`
     SELECT at FROM acore_auth.web_events
@@ -110,7 +108,6 @@ export async function handleInitialStateEvents() {
   for (const event of events) {
     await handleSingleEvent(event)
   }
+  handleNewEvents()
   return startup.at.getTime()
 }
-
-// await handleInitialStateEvents()
