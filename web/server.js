@@ -150,16 +150,11 @@ export const emit = (key, data) => {
 }
 
 const ACK_PAYLOAD = encoder.encode('event: ack\ndata: \n\n')
-const STREAM_HEADERS = {
-  'Content-Type': 'text/event-stream',
-  'Cache-Control': 'no-cache',
-  'Connection': 'keep-alive',
-}
 const routes = {
   // TODO: Get a specific player stats
   // TODO: Get a specific battleground info
   'GET/events': (req) => {
-    if (req.headers.get('accept')?.includes('text/event-stream')) {
+    if (!req.headers.get('accept')?.includes('text/event-stream')) {
       return new Response(null, { status: 400 })
     }
 
@@ -190,6 +185,21 @@ const routes = {
 
     return new Response(body, { headers: STREAM_HEADERS })
   }
+}
+
+const ALLOWED_METHODS = [...new Set(Object.keys(routes).map(k => k.split('/', 1)[0]))]
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': 'https://chupato.github.io',
+  'Vary': 'Origin',
+  'Access-Control-Allow-Methods': `${ALLOWED_METHODS.join(', ')}, OPTIONS`,
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',  
+}
+const JSON_HEADERS = { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+const STREAM_HEADERS = {
+  ...CORS_HEADERS,
+  'Content-Type': 'text/event-stream',
+  'Cache-Control': 'no-cache',
+  'Connection': 'keep-alive',
 }
 
 const serverInfo = await checkServerState()
