@@ -10,10 +10,7 @@ const STATE = {
   players: {}, // array of characters ({ id, name, account, race, class })
   battlegrounds: {},
   warsongQueue: {},
-  arena2v2Queue: {},
-  arena3v3Queue: {},
-  arenaSoloQueue: {},
-  arena5v5Queue: {},
+  arenaQueue: {},
 }
 
 let killRequested = false
@@ -75,9 +72,7 @@ wowEvents.on.LOGIN(({ at, data: { player } }) => {
 
 const removePlayerFromQueue = (playerId) => {
   STATE.warsongQueue[playerId] && (STATE.warsongQueue[playerId] = undefined)
-  STATE.arena2v2Queue[playerId] && (STATE.arena2v2Queue[playerId] = undefined)
-  STATE.arena3v3Queue[playerId] && (STATE.arena3v3Queue[playerId] = undefined)
-  STATE.arena5v5Queue[playerId] && (STATE.arena5v5Queue[playerId] = undefined)
+  STATE.arenaQueue[playerId] && (STATE.arenaQueue[playerId] = undefined)
 }
 
 wowEvents.on.LOGOUT(({ data: { player } }) => {
@@ -89,6 +84,10 @@ wowEvents.on.LOGOUT(({ data: { player } }) => {
 
 wowEvents.on.STARTUP(({ at }) => {
   STATE.startAt = at
+  STATE.warsongQueue = {}
+  STATE.arenaQueue = {}
+  STATE.players = {}
+  STATE.battlegrounds = {}
   hasChanged = true
   emit('STARTUP', { at })
 })
@@ -99,21 +98,14 @@ wowEvents.on.SHUTDOWN(({ at }) => {
   emit('SHUTDOWN', { at })
 })
 
-const getQueueName = (type, arena) => {
-  if (arena === 2) return 'arena2v2Queue'
-  if (arena === 3) return 'arena3v3Queue'
-  if (arena === 4) return 'arenaSoloQueue'
-  if (arena === 5) return 'arena5v5Queue'
-  if (type === 2) return 'warsongQueue'
-}
 const toQueueEntry = ({ id, at, source }) => [id, { at, source}]
 
 wowEvents.on.QUEUE_STATE(({ data: { type, arena, queue } }) => {
-  const queueName = getQueueName(type, arena)
+  const queueName = arena ? 'arenaQueue' : 'warsongQueue'
   if (!STATE[queueName]) return
   STATE[queueName] = Object.fromEntries(queue.map(toQueueEntry))
   hasChanged = true
-  emit('QUEUE_STATE', { type, arena, queue })
+  emit('QUEUE_STATE', { type: queueName.slice(0, -5), queue })
 })
 
 wowEvents.on.BATTLEGROUND_JOIN(({ at, data: { id, playerId, team } }) => {
