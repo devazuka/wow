@@ -2,6 +2,7 @@ import { wowEvents, handleInitialStateEvents } from './wow-events.js'
 import './world-chat.js'
 import { ac } from './soap.js'
 import { sh } from './shell.js'
+import { sql } from './db.js'
 const encoder = new TextEncoder()
 
 const STATE = {
@@ -11,6 +12,19 @@ const STATE = {
   battlegrounds: {},
   warsongQueue: {},
   arenaQueue: {},
+  last10Active: await sql`
+    SELECT
+      c.guid as id,
+      c.account,
+      c.name,
+      c.race,
+      c.class,
+      c.logout_time * 1000 as logoutAt,
+      0 as loginAt
+    FROM acore_characters.characters c
+    ORDER BY c.logout_time DESC
+    LIMIT 10
+  `
 }
 
 let killRequested = false
@@ -63,7 +77,25 @@ const getInitState = () => {
   return INIT_PAYLOAD
 }
 
+const byActivity = (a, b) => (a.loginAt - b.loginAt) || (a.logoutAt - b.logoutAt)
+
 wowEvents.on.LOGIN(({ at, data: { player } }) => {
+  player.loginAt = at
+  player.logoutAt = 0
+  REORDER_ACTIVE_PLAYERS: {
+    const { last10Active } = STATE
+    let prev = last10Active[0]
+    last10Active[0] = player
+    if (prev.id === player.id) break REORDER_ACTIVE_PLAYERS
+    let i = 0
+    while (++i < 10) {
+      let tmp = last10Active[i]
+      if (!prev) break
+      last10Active[i] = prev
+      if (!tmp || tmp.id === player.id) break
+      prev = tmp
+    }
+  }
   STATE.players[player.id] = player
   // TODO get discord info & account name
   hasChanged = true
@@ -75,11 +107,32 @@ const removePlayerFromQueue = (playerId) => {
   STATE.arenaQueue[playerId] && (STATE.arenaQueue[playerId] = undefined)
 }
 
-wowEvents.on.LOGOUT(({ data: { player } }) => {
+wowEvents.on.LOGOUT(({ at, data: { player } }) => {
   STATE.players[player.id] = undefined
   removePlayerFromQueue(player.id)
+  player.loginAt = 0
+  player.logoutAt = at
+  REORDER_ACTIVE_PLAYERS: {
+    // get index of active player
+    const { last10Active } = STATE
+    let i = -1
+    while (++i < 9) {
+      const match = last10Active[i]
+      if (!match || match.id === player.id) break
+    }
+    // push up active players
+    let next
+    while (next = last10Active[++i]) {
+      if (!next.loginAt) {
+        last10Active[i - 1] = player
+        break
+      }
+      last10Active[i - 1] = next
+      last10Active[i] = player
+    }
+  }
   hasChanged = true
-  emit('LOGOUT', { id: player.id })
+  emit('LOGOUT', { at, id: player.id })
 })
 
 wowEvents.on.STARTUP(({ at }) => {
