@@ -24,7 +24,7 @@ const checkServerState = async () => {
     }
     setTimeout(checkServerState, 250)
     console.log('server unresponsive since', Date.now() + STATE.startAt, 'ms')
-    if (!killRequested && ((Date.now() + STATE.startAt) > 60_000)) {
+    if (!killRequested && ((Date.now() + STATE.startAt) > 20_000)) {
       // more than 1 minute without being able to connect
       // send the kill signal
       killRequested = true
