@@ -33,7 +33,7 @@ const checkServerState = async () => {
   if (!infos.success) {
     if (STATE.startAt > 0) {
       STATE.startAt = -Date.now()
-      emit('SHUTDOWN', { at: Date.now() })
+      emit('SHUTDOWN', { at: -STATE.startAt })
       hasChanged = true
     }
     setTimeout(checkServerState, 250)
@@ -51,6 +51,11 @@ const checkServerState = async () => {
   killRequested = false
   const [version, ...rest] = infos.output
   STATE.version = version
+  if (STATE.startAt < 1) {
+    STATE.startAt = Date.now()
+    emit('STARTUP', { at: STATE.startAt })
+    hasChanged = true
+  }
   const parsed = { version }
   for (const line of rest) {
     for (let part of line.split('.')) {
