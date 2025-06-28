@@ -16,6 +16,7 @@ for (const type of [
   'BATTLEGROUND_LEAVE',
   'BATTLEGROUND_START',
   'BATTLEGROUND_END',
+  'PLAYER_LOCATION',
   'PVP_KILL', // { player, victim, map, x, y, z }
   'LUCKY_FISHING_HAT_OBTAINED', // { player }
   'ARENA_GRAND_MASTER_OBTAINED', // { player }
@@ -43,6 +44,7 @@ CREATE TABLE IF NOT EXISTS acore_auth.web_events (
 // Those events are not preserved in the database
 const purgedEvents = new Set([
   'GENERAL_CHANNEL_MESSAGE',
+  'PLAYER_LOCATION',
   'BATTLEGROUND_QUEUE',
   'BATTLEGROUND_END',
   'ARENA_QUEUE',

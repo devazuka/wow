@@ -19,6 +19,7 @@ const STATE = {
       c.name,
       c.race,
       c.class,
+      "World" as location,
       c.logout_time * 1000 as logoutAt,
       0 as loginAt
     FROM acore_characters.characters c
@@ -30,13 +31,13 @@ const STATE = {
 let killRequested = false
 const checkServerState = async () => {
   const infos = await ac`server info`
+  setTimeout(checkServerState, infos.success ? 5000 : 250)
   if (!infos.success) {
     if (STATE.startAt > 0) {
       STATE.startAt = -Date.now()
       emit('SHUTDOWN', { at: -STATE.startAt })
       hasChanged = true
     }
-    setTimeout(checkServerState, 250)
     console.log('server unresponsive since', Date.now() + STATE.startAt, 'ms')
     if (!killRequested && ((Date.now() + STATE.startAt) > 20_000)) {
       // more than 1 minute without being able to connect
@@ -47,7 +48,6 @@ const checkServerState = async () => {
     }
     return
   }
-  setTimeout(checkServerState, 5000)
   killRequested = false
   const [version, ...rest] = infos.output
   STATE.version = version
@@ -62,12 +62,21 @@ const checkServerState = async () => {
       part = part.trim()
       if (!part) continue
       const i = part.indexOf(':')
-      const key = part.slice(0, i).replace('|- ', '')
+      const key = part.slice(0, i).toLowerCase()
+        .replace(/[^A-Za-z0-9]+/g, ' ').trim().replaceAll(' ', '_')
       const value = part.slice(i + 2)
       if (!value) continue
       const numVal = Number(value)
       parsed[key] = Number.isNaN(numVal) ? value : numVal
     }
+  }
+  const expected = Object.values(STATE.players).filter(Boolean).length
+  if (parsed.connected_players !== expected) {
+    // TODO refresh connected player list
+    console.log('wrong number of players should fix!', {
+      actual: parsed.connected_players,
+      expected,
+    })
   }
   return parsed
 }
@@ -84,9 +93,18 @@ const getInitState = () => {
 
 const byActivity = (a, b) => (a.loginAt - b.loginAt) || (a.logoutAt - b.logoutAt)
 
+wowEvents.on.PLAYER_LOCATION(({ data: { id, location }}) => {
+  const player = STATE.players[id]
+  if (!player || player.location === location) return
+  player.location = location
+  hasChanged = true
+  emit('PLAYER_LOCATION', { id, location })
+})
+
 wowEvents.on.LOGIN(({ at, data: { player } }) => {
   player.loginAt = at
   player.logoutAt = 0
+  player.location = 'World'
   REORDER_ACTIVE_PLAYERS: {
     const { last10Active } = STATE
     let prev = last10Active[0]
@@ -174,7 +192,7 @@ wowEvents.on.BATTLEGROUND_JOIN(({ at, data: { id, playerId, team } }) => {
 
 wowEvents.on.BATTLEGROUND_LEAVE(({ data: { id, playerId } }) => {
   STATE.battlegrounds[id] && (STATE.battlegrounds[id].participants[playerId] = undefined)
-  emit('BATTLEGROUND_LEAVE', { player, id })
+  emit('BATTLEGROUND_LEAVE', { playerId, id })
 })
 
 wowEvents.on.BATTLEGROUND_START(({ at, data: { id, type, arena } }) => {
@@ -183,9 +201,10 @@ wowEvents.on.BATTLEGROUND_START(({ at, data: { id, type, arena } }) => {
   emit('BATTLEGROUND_START', { id, type, start: at })
 })
 
-wowEvents.on.BATTLEGROUND_END(({ data: { id } }) => {
+wowEvents.on.BATTLEGROUND_END(({ data: { id, winner: _winner } }) => {
   STATE.battlegrounds[id] = undefined
   hasChanged = true
+  // TODO: re-query the last 10 warsong
   emit('BATTLEGROUND_END', { id })
 })
 
