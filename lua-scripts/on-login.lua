@@ -15,8 +15,10 @@ local INVENTORY_SLOT_BAG_END = 22
 
 RegisterPlayerEvent(PLAYER_EVENT_ON_FIRST_LOGIN, function (event, player)
   -- learn spells
-  for _, spell_id in pairs(starting_info.spells[player:GetClass()]) do
-    player:LearnSpell(spell_id)
+  for _, spell in pairs(starting_info.spells[player:GetClass()]) do
+    if spell.lvl == 15 then
+      player:LearnSpell(spell.id)
+    end
   end
 
   -- grant gathering skills
@@ -39,6 +41,9 @@ RegisterPlayerEvent(PLAYER_EVENT_ON_FIRST_LOGIN, function (event, player)
   for i=INVENTORY_SLOT_BAG_START,INVENTORY_SLOT_BAG_END do
     player:EquipItem(player:AddItem(BAG_ID), i)
   end
+  player:AddBonusTalent(200)
+  player:SendBroadcastMessage("You have gained 2 talent point.")
+  player:SetLevel(15)
 
   -- add items
   for _, item_info in pairs(starting_info.items[player:GetClass()]) do
@@ -51,4 +56,9 @@ RegisterPlayerEvent(PLAYER_EVENT_ON_FIRST_LOGIN, function (event, player)
       player:EquipItem(item, item_info.slot)
     end
   end
+end)
+
+RegisterPlayerEvent(PLAYER_EVENT_ON_LEVEL_CHANGE, function (event, player, oldLevel)
+  player:AddBonusTalent(200)
+  player:SendBroadcastMessage("You have gained 1 bonus talent point.")
 end)

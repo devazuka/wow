@@ -29,3 +29,25 @@ export const sql = async (template, ...args) => {
     throw err
   }
 }
+/*
+Query Graveyard:
+
+UPDATE acore_auth.discord_account SET account_id=${3}
+WHERE discord_id=${525092099884974081n}
+// 202907732062240769n = 'test1'
+// 525092099884974081n = 'test2'
+
+SELECT online, name FROM acore_characters.characters
+
+INSERT INTO acore_auth.discord_message (message, discord_id)
+VALUES (${`test-${Math.random()}`}, ${BigInt('143860662987128832')})
+
+UPDATE acore_auth.discord_account SET discord_login=${'Clément'}
+WHERE discord_id=${143860662987128832n}
+
+INSERT INTO acore_auth.discord_account (discord_login, account_id, discord_id)
+VALUES ('Clément', 1, 143860662987128832)
+
+
+*/
+

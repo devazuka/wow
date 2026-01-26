@@ -403,8 +403,7 @@ function addEquipAndEnchantItem(player, entry)
   end
 end
 
--- Add also 55001, the alt npc
-AddGossipNpc(55000, {
+local betaProviderGossip = {
   {
     menu = "Give me the good stuff",
     icon = ICON_VENDOR_GOLD,
@@ -440,7 +439,10 @@ AddGossipNpc(55000, {
       player:SendBroadcastMessage("Reset cooldowns")
     end
   }
-})
+}
+
+AddGossipNpc(55000, betaProviderGossip)
+AddGossipNpc(55001, betaProviderGossip)
 
 -- .reload creature_template 55000
 -- UPDATE creature_template SET npcflag = npcflag | 1 WHERE entry = 55000;

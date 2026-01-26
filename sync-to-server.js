@@ -237,11 +237,11 @@ onSheetChange(['GEAR', 'CLASS'], async (gear, classSpells) => {
     if (!spell.id) continue
     const c = spell.class?.toLowerCase()
     missingClasses.delete(c)
-    ;(startingSpells[c] || (startingSpells[c] = [])).push(spell.id)
+    ;(startingSpells[c] || (startingSpells[c] = [])).push(`{ id = ${spell.id}, lvl = ${spell.level || 15} }`)
   }
 
   const startingSpellLua = Object.entries(startingSpells)
-    .map(([className, spellId]) => `[${className.toUpperCase()}] = { ${spellId.join(', ')} },
+    .map(([className, spells]) => `[${className.toUpperCase()}] = { ${spells.join(', ')} },
 `).join('  ')
 
   const startingItemLua = Object.entries(startItems)
@@ -380,8 +380,8 @@ onCodeChange(async function SET_DEFAULTS() {
   `
 
   await sql`
-    INSERT INTO chupato_world.creature_template (\`entry\`, \`difficulty_entry_1\`, \`difficulty_entry_2\`, \`difficulty_entry_3\`, \`KillCredit1\`, \`KillCredit2\`, \`name\`, \`subname\`, \`IconName\`, \`gossip_menu_id\`, \`minlevel\`, \`maxlevel\`, \`exp\`, \`faction\`, \`npcflag\`, \`speed_walk\`, \`speed_run\`, \`speed_swim\`, \`speed_flight\`, \`detection_range\`, \`scale\`, \`rank\`, \`dmgschool\`, \`DamageModifier\`, \`BaseAttackTime\`, \`RangeAttackTime\`, \`BaseVariance\`, \`RangeVariance\`, \`unit_class\`, \`unit_flags\`, \`unit_flags2\`, \`dynamicflags\`, \`family\`, \`trainer_type\`, \`trainer_spell\`, \`trainer_class\`, \`trainer_race\`, \`type\`, \`type_flags\`, \`lootid\`, \`pickpocketloot\`, \`skinloot\`, \`PetSpellDataId\`, \`VehicleId\`, \`mingold\`, \`maxgold\`, \`AIName\`, \`MovementType\`, \`HoverHeight\`, \`HealthModifier\`, \`ManaModifier\`, \`ArmorModifier\`, \`ExperienceModifier\`, \`RacialLeader\`, \`movementId\`, \`RegenHealth\`, \`mechanic_immune_mask\`, \`spell_school_immune_mask\`, \`flags_extra\`, \`ScriptName\`, \`VerifiedBuild\`)
-    VALUES (55000, 0, 0, 0, 0, 0, 'Slahtz', 'B.E.T.A Provider', '', 10638, 19, 19, 0, 120, 1, 1, 1.14286, 1, 1, 20, 1, 0, 0, 1, 2000, 2000, 1, 1, 4, 256, 2048, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 1, 2.44989, 1, 1, 1, 0, 0, 1, 0, 0, 2, '', 10314)
+    INSERT INTO chupato_world.creature_template (\`entry\`, \`difficulty_entry_1\`, \`difficulty_entry_2\`, \`difficulty_entry_3\`, \`KillCredit1\`, \`KillCredit2\`, \`name\`, \`subname\`, \`IconName\`, \`gossip_menu_id\`, \`minlevel\`, \`maxlevel\`, \`exp\`, \`faction\`, \`npcflag\`, \`speed_walk\`, \`speed_run\`, \`speed_swim\`, \`speed_flight\`, \`detection_range\`, \`scale\`, \`rank\`, \`dmgschool\`, \`DamageModifier\`, \`BaseAttackTime\`, \`RangeAttackTime\`, \`BaseVariance\`, \`RangeVariance\`, \`unit_class\`, \`unit_flags\`, \`unit_flags2\`, \`dynamicflags\`, \`family\`, \`type\`, \`type_flags\`, \`lootid\`, \`pickpocketloot\`, \`skinloot\`, \`PetSpellDataId\`, \`VehicleId\`, \`mingold\`, \`maxgold\`, \`AIName\`, \`MovementType\`, \`HoverHeight\`, \`HealthModifier\`, \`ManaModifier\`, \`ArmorModifier\`, \`ExperienceModifier\`, \`RacialLeader\`, \`movementId\`, \`RegenHealth\`, \`mechanic_immune_mask\`, \`spell_school_immune_mask\`, \`flags_extra\`, \`ScriptName\`, \`VerifiedBuild\`)
+    VALUES (55000, 0, 0, 0, 0, 0, 'Slahtz', 'B.E.T.A Provider', '', 10638, 19, 19, 0, 120, 1, 1, 1.14286, 1, 1, 20, 1, 0, 0, 1, 2000, 2000, 1, 1, 4, 256, 2048, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 1, 2.44989, 1, 1, 1, 0, 0, 1, 0, 0, 2, '', 10314)
   `
   await sql`
     DELETE FROM chupato_world.creature_template_model WHERE \`CreatureID\`=55000

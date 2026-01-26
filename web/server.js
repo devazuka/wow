@@ -218,8 +218,33 @@ export const emit = (key, data) => {
   }
 }
 
+const json = (data) => new Response(JSON.stringify(data), { headers: JSON_HEADERS })
+
+const last10Active = await sql`
+  SELECT
+    c.account,
+    c.name,
+    c.race,
+    c.class,
+    c.logout_time * 1000 as logoutAt
+  FROM acore_characters.characters c
+  ORDER BY c.logout_time DESC
+  LIMIT 10
+`
+
 const ACK_PAYLOAD = encoder.encode('event: ack\ndata: \n\n')
 const routes = {
+  'GET/players/active': async () => json(await sql`
+    SELECT
+      c.account,
+      c.name,
+      c.race,
+      c.class,
+      c.logout_time * 1000 as logoutAt
+    FROM acore_characters.characters c
+    ORDER BY c.logout_time DESC
+    LIMIT 10
+  `),
   // TODO: Get a specific player stats
   // TODO: Get a specific battleground info
   'GET/events': (req) => {
@@ -280,6 +305,20 @@ if (!serverInfo) {
 }
 console.log(serverInfo)
 
+// Get last 10 active players
+
+// Get a single player
+// - with gear
+// - with talent (dual spec !)
+// - with recipies learned (?)
+//   - list the professions and levelg
+// - with pvp stats
+//   - personnal rating
+//   - last 10 warsong
+//   - arena rating
+//   - total kill ever / (week ?) / (day ?)
+//   - world kill history (ratio, last 10 deaths)
+
 export default {
   fetch(req) {
     const url = new URL(req.url, 'http://localhost')
@@ -290,3 +329,6 @@ export default {
     return handler(req, url)
   }
 }
+
+// TODO: use Map for internal state and properly convert when JSON.stringify (to entries)
+// fineer grain on change management (only keys that changed)

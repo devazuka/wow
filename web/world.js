@@ -34,4 +34,8 @@ await sql`
 SELECT * from acore_world.creature_template_model where CreatureID=35365 limit 1
 `
 
+await sql`
+UPDATE acore_world.creature_template SET npcflag = npcflag | 1 WHERE entry = 1756
+`
+
 const npc2 = await creature_template.get(35365)

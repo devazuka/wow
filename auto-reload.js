@@ -27,7 +27,7 @@ const updateNow = debounce(async () => {
         continue
       }
       console.log(file, 'synced')
-      await ac`reload eluna`
+      await ac`reload ale`
       console.log(file, 'reloaded')
     }
   } catch (err) {

@@ -71,6 +71,7 @@ const syncUserData = async (member, user) => {
 
   if (userData.gmLevel !== gmLevel) {
     console.log(`account ${login} gm-level changed from ${userData.gmLevel} to ${gmLevel}`)
+    userData.gmLevel = gmLevel
     await setGmLevel(userData.account, gmLevel)
   }
 
