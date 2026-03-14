@@ -53,7 +53,7 @@ const gathering = [
 
 const sheetID = '11PVL9YA1lmCoqaIguKjwuDFX58e8hzAh6kzDXA4jBV4'
 const getSheet = async (page) =>
-  (await fetch(`https://opensheet.elk.sh/${sheetID}/${page}`)).arrayBuffer()
+  (await fetch(`https://gsheet.devazuka.com/${sheetID}/${page}`)).arrayBuffer()
 
 const ts = (init) => {
   const at = new Date(init)
@@ -81,9 +81,11 @@ const syncDBC = async (dbcName, dbc) => {
   await Deno.remove(`${tmpDir}/${dbcName}`)
 }
 
+const cache = {}
 const openDBC = async (dbcName) => {
+  if (cache[dbcName]) return cache[dbcName]
   const bytes = await Deno.readFile(`data/dbc/${dbcName}`)
-  return DBC.fromBytes(dbcName, bytes.buffer)
+  return cache[dbcName] = DBC.fromBytes(dbcName, bytes.buffer)
 }
 
 const updateDBC = async (dbcName, data) => {
