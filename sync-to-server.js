@@ -489,6 +489,10 @@ onSheetChange(['PROFESSION', 'SPELL.DBC', 'PET'], async (professionSheet, spellS
     const ReagentCount_3 = Number(row.ReagentCount_3) || 0 // "2",
     const Reagent_4 = Number(row.Reagent_4) || 0 // "2321",
     const ReagentCount_4 = Number(row.ReagentCount_4) || 0 // "1"
+    const Reagent_5 = Number(row.Reagent_5) || 0 // "2321",
+    const ReagentCount_5 = Number(row.ReagentCount_5) || 0 // "1"
+    const Reagent_6 = Number(row.Reagent_6) || 0 // "2321",
+    const ReagentCount_6 = Number(row.ReagentCount_6) || 0 // "1"
     const itemId = Number(row.item)
     const skillReq = Number(row.ReqSkillRank)
     if (!spellId) continue
@@ -510,7 +514,11 @@ onSheetChange(['PROFESSION', 'SPELL.DBC', 'PET'], async (professionSheet, spellS
         Reagent_3=${Reagent_3},
         ReagentCount_3=${ReagentCount_3},
         Reagent_4=${Reagent_4},
-        ReagentCount_4=${ReagentCount_4}
+        ReagentCount_4=${ReagentCount_4},
+        Reagent_5=${Reagent_5},
+        ReagentCount_5=${ReagentCount_5},
+        Reagent_6=${Reagent_6},
+        ReagentCount_6=${ReagentCount_6}
       WHERE ID=${spellId}
       `
 
@@ -520,6 +528,8 @@ onSheetChange(['PROFESSION', 'SPELL.DBC', 'PET'], async (professionSheet, spellS
       Reagent_2, ReagentCount_2,
       Reagent_3, ReagentCount_3,
       Reagent_4, ReagentCount_4,
+      Reagent_5, ReagentCount_5,
+      Reagent_6, ReagentCount_6,
     })
       continue
     }
@@ -549,7 +559,11 @@ onSheetChange(['PROFESSION', 'SPELL.DBC', 'PET'], async (professionSheet, spellS
       Reagent_3=${Reagent_3},
       ReagentCount_3=${ReagentCount_3},
       Reagent_4=${Reagent_4},
-      ReagentCount_4=${ReagentCount_4}
+      ReagentCount_4=${ReagentCount_4},
+      Reagent_5=${Reagent_5},
+      ReagentCount_5=${ReagentCount_5},
+      Reagent_6=${Reagent_6},
+      ReagentCount_6=${ReagentCount_6}
     WHERE ID=${spellId}
     `
 
@@ -582,6 +596,8 @@ onSheetChange(['PROFESSION', 'SPELL.DBC', 'PET'], async (professionSheet, spellS
       Reagent_2, ReagentCount_2,
       Reagent_3, ReagentCount_3,
       Reagent_4, ReagentCount_4,
+      Reagent_5, ReagentCount_5,
+      Reagent_6, ReagentCount_6,
     })
   }
 
