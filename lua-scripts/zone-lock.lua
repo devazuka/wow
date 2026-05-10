@@ -26,9 +26,19 @@ local allowed_areas = {
     [1742] = true, -- Spirit Den
     [2177] = true, -- Battle Ring
   },
-  [721] = {
-    [721] = true, -- Gnomergan
-  }
+  [721] = { [721] = true }, -- Gnomergan
+  [719] = { [719] = true }, -- Blackfathom Deeps
+  [331] = { -- Ashenvale
+    [2897] = true, -- Zoram'gar Outpost
+    [414] = true, -- The Zoram Strand
+  },
+  [17] = { -- The Barrens
+    [392] = true, -- Ratchet
+    [391] = true, -- The Merchant Coast
+    [385] = true, -- Northwatch Hold
+    [401] = true, -- The Tidus Stair
+    [720] = true, -- Fray Island
+  },
 }
 
 function Teleport (map, x, y, z, o)
