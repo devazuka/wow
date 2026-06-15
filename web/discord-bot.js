@@ -1,4 +1,4 @@
-import { cyan, magenta, brightRed } from 'jsr:@std/fmt/colors'
+import { cyan, magenta, brightRed, green } from 'jsr:@std/fmt/colors'
 const TOKEN = Deno.env.get('DISCORD_TOKEN')
 
 const ONCE = {}
@@ -92,10 +92,14 @@ const restActionTypes = [
 
 export const discord = { once: {}, on: {}, do: {}, rest: {} }
 
+const stacks = new Map()
 const registerEvent = (type) => {
   const on = (ON[type] = new Set())
   const once = (ONCE[type] = new Set())
-  const next = (fn) => once.add(fn)
+  const next = (fn) => {
+    stacks.set(fn, Error(`Source: ${fn.name}`).stack)
+    once.add(fn)
+  }
   discord.on[type] = (fn) => on.add(fn)
   discord.once[type] = () => new Promise(next)
 }
@@ -216,17 +220,30 @@ const connect = failCount => {
     reconnect()
   })
 
+  const run = (fn, d) => {
+    try {
+      fn(d)
+    } catch (err) {
+      const stack = stacks.get(fn)
+      console.log(brightRed('ERROR:'))
+      console.log(err)
+      console.log(cyan('STACK:'))
+      console.log(stack)
+      console.log(green('FUNCTION:'))
+      console.log(String(fn))
+    }
+  }
   ws.addEventListener('message', (event) => {
     const { t, s, op, d } = JSON.parse(event.data)
     switch (op) {
       case 0: {
         // DISPATCH
-        log(`${cyan(t)}`, d)
+        log(cyan(t), d)
         const on = ON[t]
         const once = ONCE[t]
         if (!on) return
-        for (const fn of on) fn(d)
-        for (const fn of once) fn(d)
+        for (const fn of on) run(fn, d)
+        for (const fn of once) run(fn, d)
         once.clear()
         return
       }

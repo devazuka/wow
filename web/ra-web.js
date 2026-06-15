@@ -19,7 +19,7 @@ export const createAccount = async ({
   }
   // TODO: use sql instead for this one
   gmLevel && (await setGmLevel(username, gmLevel))
-  const [account] = await sql`SELECT * FROM acore_auth.account WHERE username = ${username}`
+  const [account] = await sql`SELECT * FROM acore_auth.account WHERE username LIKE ${username}`
   return account
 }
 
