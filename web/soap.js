@@ -1,6 +1,6 @@
 const password = Deno.env.get('PASSWORD').slice(0, 16)
 const hostname = Deno.env.get('HOSTNAME') || 'localhost'
-const SOAP_PORT = '7878'
+const SOAP_PORT = Deno.env.get('SOAP_PORT') || '7878'
 
 const authorization = `Basic ${btoa(`system:${password}`)}`
 const makeSoapBody = command => `
