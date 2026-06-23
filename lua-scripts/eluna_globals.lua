@@ -1420,12 +1420,12 @@ function FormatPlayer(player)
 end
 
 SERVER_START_AT = GetCurrTime()
+WORLD_ID = 1
 function SendWebEvent(type, player, data)
   data = data or {}
   data.start = SERVER_START_AT
   if player then
     data.player = FormatPlayer(player)
   end
-  WorldDBExecute("INSERT INTO acore_auth.web_events (type, data) VALUES ('"..type.."', "..EncodeValue(data)..")")
+  WorldDBExecute("INSERT INTO acore_auth.web_events (type, world, data) VALUES ('"..type.."', "..WORLD_ID..", "..EncodeValue(data)..")")
 end
-
