@@ -1,6 +1,7 @@
 import { sql } from './db.js'
 
 // tables
+const worldId = Number(Deno.env.get('WORLD_ID')) || 1
 
 const ONCE = {}
 const ON = {}
@@ -108,7 +109,7 @@ const handleSingleEvent = async event => {
 
 async function handleNewEvents() {
   const events = await sql`
-    SELECT * FROM acore_auth.web_events WHERE start IS NULL
+    SELECT * FROM acore_auth.web_events WHERE start IS NULL AND world=${worldId}
   `
 
   for (const event of events) {
@@ -133,12 +134,12 @@ async function handleNewEvents() {
 export async function handleInitialStateEvents() {
   const [startup] = await sql`
     SELECT * FROM acore_auth.web_events
-    WHERE type = "STARTUP"
+    WHERE type = "STARTUP" AND world=${worldId}
     ORDER BY at DESC LIMIT 1
   `
 
   const events = await sql`
-    SELECT * FROM acore_auth.web_events WHERE at > ${startup.at}
+    SELECT * FROM acore_auth.web_events WHERE world=${worldId} AND at > ${startup.at}
   `
 
   await handleSingleEvent(startup)
