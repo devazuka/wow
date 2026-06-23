@@ -10,7 +10,7 @@ export const describeImage = async (imageUrl) => {
     { text: prompt },
     { inline_data: { mime_type: "image/webp", data: imageBase64 } }
   ]
-  const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${TOKEN}`, {
+  const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${TOKEN}`, {
     method: 'POST',
     body: JSON.stringify({
       contents: [{ parts }],

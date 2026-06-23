@@ -12,7 +12,14 @@ const STATE = {
   battlegrounds: {},
   warsongQueue: {},
   arenaQueue: {},
-  last10Active: await sql`
+  last10Active: [],
+}
+
+const prefix = Deno.env.get('DB_PREFIX') || 'acore_'
+const origin = Deno.env.get('ORIGIN') || 'https://chupato.github.io'
+const charDb = `${prefix}characters`
+
+const getRecentActivePlayers = () => sql`
     SELECT
       c.guid as id,
       c.account,
@@ -22,10 +29,42 @@ const STATE = {
       "World" as location,
       c.logout_time * 1000 as logoutAt,
       0 as loginAt
-    FROM acore_characters.characters c
+    FROM ${charDb}.characters c
     ORDER BY c.logout_time DESC
     LIMIT 10
   `
+
+const getOnlinePlayers = () => sql`
+  SELECT
+    c.guid as id,
+    c.account,
+    c.name,
+    c.race,
+    c.class,
+    "World" as location,
+    0 as logoutAt,
+    UNIX_TIMESTAMP() * 1000 as loginAt
+  FROM ${charDb}.characters c
+  WHERE c.online = 1
+  ORDER BY c.name
+`
+
+const seedInitialState = async () => {
+  const [last10Active, onlinePlayers] = await Promise.all([
+    getRecentActivePlayers(),
+    getOnlinePlayers(),
+  ])
+
+  STATE.last10Active = last10Active
+  for (const player of onlinePlayers) {
+    STATE.players[player.id] = player
+    if (!STATE.last10Active.some(({ id }) => id === player.id)) {
+      STATE.last10Active.unshift(player)
+      STATE.last10Active.length = Math.min(STATE.last10Active.length, 10)
+    }
+  }
+
+  hasChanged = true
 }
 
 let killRequested = false
@@ -220,18 +259,6 @@ export const emit = (key, data) => {
 
 const json = (data) => new Response(JSON.stringify(data), { headers: JSON_HEADERS })
 
-const last10Active = await sql`
-  SELECT
-    c.account,
-    c.name,
-    c.race,
-    c.class,
-    c.logout_time * 1000 as logoutAt
-  FROM acore_characters.characters c
-  ORDER BY c.logout_time DESC
-  LIMIT 10
-`
-
 const ACK_PAYLOAD = encoder.encode('event: ack\ndata: \n\n')
 const routes = {
   'GET/players/active': async () => json(await sql`
@@ -241,7 +268,7 @@ const routes = {
       c.race,
       c.class,
       c.logout_time * 1000 as logoutAt
-    FROM acore_characters.characters c
+    FROM ${charDb}.characters c
     ORDER BY c.logout_time DESC
     LIMIT 10
   `),
@@ -283,7 +310,7 @@ const routes = {
 
 const ALLOWED_METHODS = [...new Set(Object.keys(routes).map(k => k.split('/', 1)[0]))]
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://chupato.github.io',
+  'Access-Control-Allow-Origin': origin,
   'Vary': 'Origin',
   'Access-Control-Allow-Methods': `${ALLOWED_METHODS.join(', ')}, OPTIONS`,
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',  
@@ -300,6 +327,9 @@ const serverInfo = await checkServerState()
 console.time('Initialize state')
 STATE.startAt = await handleInitialStateEvents()
 console.timeEnd('Initialize state')
+console.time('Seed initial state')
+await seedInitialState()
+console.timeEnd('Seed initial state')
 if (!serverInfo) {
   STATE.startAt = -Date.now()
 }

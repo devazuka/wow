@@ -7,11 +7,12 @@ import { describeImage } from './gemini.js'
 import { createAccount, setGmLevel, setPassword } from './ra-web.js'
 
 const botUserID = '766251453337436170' // App Id
-const guildId = '310186336961167385'
-const generalChannelId = '310186336961167385'
+const guildId = Deno.env.get('DISCORD_GUILD_ID')
+const generalChannelId = Deno.env.get('DISCORD_GUILD_ID')
 const roleGMLevel = {
-  '310187315081248779': 3,
-  '1333925509171642368': 2,
+  [Deno.env.get('GM_LEVEL_1') || '_1']: 1,
+  [Deno.env.get('GM_LEVEL_2') || '_2']: 2,
+  [Deno.env.get('GM_LEVEL_3') || '_3']: 3,
 }
 
 const getHighestGMLevel = (acc, role) => Math.max(acc, roleGMLevel[role] || 0)
@@ -154,10 +155,7 @@ discord.on.MESSAGE_CREATE(async event => {
       user_ids: [event.author.id],
     })
 
-    if (!members.length) {
-      const content = `You must be in <#${guildId}> to talk to me.`
-      return discord.rest.POST_CHANNEL_MESSAGE({ channel: event.channel_id, content })
-    }
+    if (!members.length) return
 
     const userData = await syncUserData(members[0], event.author)
     const isPwdRequest = event.content.toLowerCase().indexOf('password')

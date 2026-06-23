@@ -1,5 +1,6 @@
 import { cyan, magenta, brightRed, green } from 'jsr:@std/fmt/colors'
 const TOKEN = Deno.env.get('DISCORD_TOKEN')
+const GUILD_ID = Deno.env.get('DISCORD_GUILD_ID')
 
 const ONCE = {}
 const ON = {}
@@ -105,10 +106,15 @@ const registerEvent = (type) => {
 }
 
 let intents = 1 << 15 // MESSAGE_CONTENT intent
-Object.values(eventTypes).forEach((types, index) => {
+Object.entries(eventTypes).forEach(([name, types], index) => {
+  if (GUILD_ID && name.startsWith('DIRECT_')) return
   types.length && (intents |= 1 << index)
   types.forEach(registerEvent)
 })
+
+const guildIdEventTypes = new Set(['GUILD_CREATE', 'GUILD_UPDATE', 'GUILD_DELETE'])
+const getEventGuildId = (type, d) => d?.guild_id || (guildIdEventTypes.has(type) ? d?.id : null)
+const shouldDispatch = (type, d) => !GUILD_ID || getEventGuildId(type, d) === GUILD_ID || type === 'READY' || type === 'RESUMED'
 
 let handleMessages = () => {}
 
@@ -124,7 +130,7 @@ for (const [key, op] of Object.entries(actionTypes)) {
 registerEvent('READY')
 
 let gatewayUrl = 'wss://gateway.discord.gg'
-discord.once.READY().then(d => gatewayUrl = d.resume_gateway_url)
+discord.on.READY(d => gatewayUrl = d.resume_gateway_url)
 const log = (type, d) => {
   if (!d) return console.log(type, null)
   const {
@@ -173,12 +179,19 @@ const connect = failCount => {
   console.log('connecting to', magenta(gatewayUrl))
   const start = Date.now()
   const ws = new WebSocket(`${gatewayUrl}/?v=10&encoding=json`)
-  let s = null
-  let heartbeatAc
+  let seq = null
+  let heartbeatInterval
+  let heartbeatTimeout
+  let waitingForHeartbeatAck = false
   let reconnecting
+  const stopHeartbeat = () => {
+    clearInterval(heartbeatInterval)
+    clearTimeout(heartbeatTimeout)
+  }
   const reconnect = () => {
     if (reconnecting) return
     reconnecting = true
+    stopHeartbeat()
     // limit reconnection attemps rate exponentially
     const nextTryIn = Math.max(0, (start + 1000*(2**failCount - 1) - Date.now()))
     setTimeout(connect, nextTryIn, failCount + 1)
@@ -188,6 +201,7 @@ const connect = failCount => {
     console.log('connected in', Date.now() - last)
     handleMessages = () => {
       for (const message of messagesToSend) {
+        if (ws.readyState !== WebSocket.OPEN) return
         ws.send(message)
         messagesToSend.delete(message)
       }
@@ -199,17 +213,32 @@ const connect = failCount => {
   const resetConnection = () => {
     // console.log(cyan('ZOMBIFED'), 'reconnect the client', new Date())
     // TODO: try too resume ?
+    stopHeartbeat()
     ws.close()
     reconnect()
   }
 
-  const heartbeat = () => {
-    heartbeatAc = setTimeout(resetConnection, 250)
+  const sendHeartbeat = () => {
     last = Date.now()
-    ws.OPEN && ws.send(JSON.stringify({ op: 1, d: s }))
+    waitingForHeartbeatAck = true
+    if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 1, d: seq }))
+  }
+
+  const heartbeat = () => {
+    if (waitingForHeartbeatAck) return resetConnection()
+    sendHeartbeat()
+  }
+
+  const startHeartbeat = (interval) => {
+    stopHeartbeat()
+    heartbeatTimeout = setTimeout(() => {
+      heartbeat()
+      heartbeatInterval = setInterval(heartbeat, interval)
+    }, Math.random() * interval)
   }
 
   ws.addEventListener('close', (event) => {
+    stopHeartbeat()
     console.log('close socket', JSON.stringify({
       timeStamp: event.timeStamp,
       type: event.type,
@@ -235,9 +264,11 @@ const connect = failCount => {
   }
   ws.addEventListener('message', (event) => {
     const { t, s, op, d } = JSON.parse(event.data)
+    if (s != null) seq = s
     switch (op) {
       case 0: {
         // DISPATCH
+        if (!shouldDispatch(t, d)) return
         log(cyan(t), d)
         const on = ON[t]
         const once = ONCE[t]
@@ -248,7 +279,7 @@ const connect = failCount => {
         return
       }
       case 1: // HEARTBEAT
-        return heartbeat()
+        return sendHeartbeat()
       case 2: // IDENTIFY
         return log('IDENTIFY', d)
       case 3: // STATUSUPDATE
@@ -266,6 +297,7 @@ const connect = failCount => {
         return log('INVALIDSESSION', d)
       }
       case 10: // HELLO
+        startHeartbeat(d.heartbeat_interval)
         ws.send(
           JSON.stringify({
             op: 2, // IDENTIFY
@@ -276,11 +308,11 @@ const connect = failCount => {
             },
           }),
         )
-        setInterval(heartbeat, d.heartbeat_interval)
         return
-      case 11: // HEARTBEATAC
+      case 11: // HEARTBEATACK
         // log('HEARTBEATAC', { delay: Date.now() - last })
-        return clearTimeout(heartbeatAc)
+        waitingForHeartbeatAck = false
+        return
       default:
         log(`OP_${op}`, d)
     }
