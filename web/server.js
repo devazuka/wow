@@ -19,8 +19,8 @@ const prefix = Deno.env.get('DB_PREFIX') || 'acore_'
 const origin = Deno.env.get('ORIGIN') || 'https://chupato.github.io'
 const charDb = `${prefix}characters`
 
-const getRecentActivePlayers = () => sql`
-    SELECT
+const getRecentActivePlayers = () => sql([`
+  SELECT
       c.guid as id,
       c.account,
       c.name,
@@ -30,11 +30,11 @@ const getRecentActivePlayers = () => sql`
       c.logout_time * 1000 as logoutAt,
       0 as loginAt
     FROM ${charDb}.characters c
-    ORDER BY c.logout_time DESC
-    LIMIT 10
-  `
+  ORDER BY c.logout_time DESC
+  LIMIT 10
+`])
 
-const getOnlinePlayers = () => sql`
+const getOnlinePlayers = () => sql([`
   SELECT
     c.guid as id,
     c.account,
@@ -47,7 +47,7 @@ const getOnlinePlayers = () => sql`
   FROM ${charDb}.characters c
   WHERE c.online = 1
   ORDER BY c.name
-`
+`])
 
 const seedInitialState = async () => {
   const [last10Active, onlinePlayers] = await Promise.all([
@@ -261,7 +261,7 @@ const json = (data) => new Response(JSON.stringify(data), { headers: JSON_HEADER
 
 const ACK_PAYLOAD = encoder.encode('event: ack\ndata: \n\n')
 const routes = {
-  'GET/players/active': async () => json(await sql`
+  'GET/players/active': async () => json(await sql([`
     SELECT
       c.account,
       c.name,
@@ -271,7 +271,7 @@ const routes = {
     FROM ${charDb}.characters c
     ORDER BY c.logout_time DESC
     LIMIT 10
-  `),
+  `])),
   // TODO: Get a specific player stats
   // TODO: Get a specific battleground info
   'GET/events': (req) => {
