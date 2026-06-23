@@ -42,6 +42,39 @@ CREATE TABLE IF NOT EXISTS acore_auth.web_events (
 );
 `
 
+await sql`
+CREATE TABLE IF NOT EXISTS acore_auth.web_events_archive
+LIKE acore_auth.web_events;
+`
+
+try {
+  await sql`ALTER TABLE acore_auth.web_events ADD INDEX web_events_archive_idx (end, at);`
+} catch (err) {
+  if (!/Duplicate key name|already exists/i.test(err.message)) throw err
+}
+
+try {
+  await sql`
+  CREATE EVENT IF NOT EXISTS acore_auth.archive_web_events
+  ON SCHEDULE EVERY 1 HOUR
+  DO
+  BEGIN
+    INSERT IGNORE INTO acore_auth.web_events_archive
+    SELECT *
+    FROM acore_auth.web_events
+    WHERE at < NOW(3) - INTERVAL 7 DAY
+      AND end IS NOT NULL;
+
+    DELETE FROM acore_auth.web_events
+    WHERE at < NOW(3) - INTERVAL 7 DAY
+      AND end IS NOT NULL;
+  END;
+  `
+} catch (err) {
+  console.warn('Unable to create acore_auth.archive_web_events. Enable event_scheduler and grant EVENT privilege if automatic archiving is needed.')
+  console.warn(err)
+}
+
 // Those events are not preserved in the database
 const purgedEvents = new Set([
   'GENERAL_CHANNEL_MESSAGE',
