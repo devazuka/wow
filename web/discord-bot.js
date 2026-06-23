@@ -107,23 +107,27 @@ const registerEvent = (type) => {
 
 let intents = 1 << 15 // MESSAGE_CONTENT intent
 Object.entries(eventTypes).forEach(([name, types], index) => {
-  if (GUILD_ID && name.startsWith('DIRECT_')) return
   types.length && (intents |= 1 << index)
   types.forEach(registerEvent)
 })
 
 const guildIdEventTypes = new Set(['GUILD_CREATE', 'GUILD_UPDATE', 'GUILD_DELETE'])
 const getEventGuildId = (type, d) => d?.guild_id || (guildIdEventTypes.has(type) ? d?.id : null)
-const shouldDispatch = (type, d) => !GUILD_ID || getEventGuildId(type, d) === GUILD_ID || type === 'READY' || type === 'RESUMED'
+const shouldDispatch = (type, d) => {
+  if (!GUILD_ID || type === 'READY' || type === 'RESUMED') return true
+  const guildId = getEventGuildId(type, d)
+  return !guildId || guildId === GUILD_ID
+}
 
 let handleMessages = () => {}
 
 const messagesToSend = new Set()
 for (const [key, op] of Object.entries(actionTypes)) {
   discord.do[key] = d => {
+    const response = discord.once.GUILD_MEMBERS_CHUNK()
     messagesToSend.add(JSON.stringify({ op, d }))
     handleMessages()
-    return discord.once.GUILD_MEMBERS_CHUNK()
+    return response
   }
 }
 
