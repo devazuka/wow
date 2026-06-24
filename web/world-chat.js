@@ -14,29 +14,59 @@ const roleGMLevel = {
   [Deno.env.get('GM_LEVEL_2') || '_2']: 2,
   [Deno.env.get('GM_LEVEL_3') || '_3']: 3,
 }
+const MAX_ACCOUNT_USERNAME_LENGTH = 17
+const MAX_DISCORD_LOGIN_LENGTH = 255
 
 const getHighestGMLevel = (acc, role) => Math.max(acc, roleGMLevel[role] || 0)
+const toAccountNamePart = value => (value || '')
+  .normalize('NFKD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase()
+  .replace(/[^a-z0-9]/g, '')
+
+const toAccountUsername = (user, login = user.username) => {
+  const idSuffix = user.id.slice(-6)
+  const base = toAccountNamePart(login) || toAccountNamePart(user.username) || 'discord'
+  const nameLength = MAX_ACCOUNT_USERNAME_LENGTH - idSuffix.length
+  return `${base.slice(0, nameLength)}${idSuffix}`
+}
+const toDiscordLogin = (user, login) => {
+  const normalized = (login || user.username || '')
+    .normalize('NFKC')
+  const dbSafe = [...normalized]
+    .filter(char => char.codePointAt(0) <= 0xFFFF)
+    .join('')
+    .trim()
+    .slice(0, MAX_DISCORD_LOGIN_LENGTH)
+  return dbSafe || toAccountUsername(user)
+}
 
 const activeUsers = {}
 const activeUsersByAccount = {}
-const syncUserData = async (member, user) => {
+const activeUserSyncs = new Map()
+const syncUserDataNow = async (member, user) => {
   if (!member) return
-  const gmLevel = member.roles.reduce(getHighestGMLevel, 0)
   user || (user = member.user)
-  const login = member.nick || user.global_name || user.username
+  if (!user || user.bot) return
+
+  const gmLevel = member.roles.reduce(getHighestGMLevel, 0)
+  const displayLogin = member.nick || user.global_name || user.username
+  const login = toDiscordLogin(user, displayLogin)
+  const accountUsername = toAccountUsername(user, displayLogin)
   const id = BigInt(user.id)
   let userData = activeUsers[id]
-  if (!userData) {
+  if (!userData?.account) {
     const [currentData] = await sql`
       SELECT discord_id AS id, discord_login AS login, account_id AS account
       FROM acore_auth.discord_account WHERE discord_id=${id}
     `
     if (currentData) {
-      currentData.account &&
-        (activeUsersByAccount[currentData.account] = currentData)
-      userData = (activeUsers[id] = currentData)
+      userData = (activeUsers[id] = {
+        ...currentData,
+        gmLevel: userData?.gmLevel,
+      })
       if (!userData.account) {
-        const account = await createAccount({ username: login })
+        const account = await createAccount({ username: accountUsername, useExisting: true })
         await sql`
           UPDATE acore_auth.discord_account
           SET account_id=${account.id}
@@ -45,14 +75,19 @@ const syncUserData = async (member, user) => {
         userData.account = account.id
       }
     } else {
-      const account = await createAccount({ username: login })
+      const account = await createAccount({ username: accountUsername, useExisting: true })
       await sql`
         INSERT INTO acore_auth.discord_account (discord_id, discord_login, account_id)
         VALUES (${id}, ${login}, ${account.id})
       `
       userData = (activeUsers[id] = { id, login, account: account.id })
-    }    
-  } else if (!userData.gmLevel) {
+    }
+
+    userData.account &&
+      (activeUsersByAccount[userData.account] = userData)
+  }
+
+  if (userData.gmLevel == null) {
     const access = await sql`
       SELECT gmlevel FROM acore_auth.account_access
       WHERE id=${userData.account}
@@ -78,6 +113,48 @@ const syncUserData = async (member, user) => {
 
   return userData
 }
+
+const syncUserData = (member, user = member?.user) => {
+  if (!member || !user || user.bot) return
+  const currentSync = activeUserSyncs.get(user.id)
+  if (currentSync) return currentSync
+  const sync = syncUserDataNow(member, user)
+    .finally(() => activeUserSyncs.delete(user.id))
+  activeUserSyncs.set(user.id, sync)
+  return sync
+}
+
+const syncGuildMembers = async () => {
+  if (!guildId) {
+    console.log('DISCORD_GUILD_ID is not set; skipping guild member sync')
+    return
+  }
+
+  console.time('Sync guild members')
+  let after = '0'
+  let synced = 0
+  while (true) {
+    const members = await discord.rest.GET_GUILD_MEMBERS({ guild: guildId, after })
+    if (!members.length) break
+
+    for (const member of members) {
+      try {
+        (await syncUserData(member)) && synced++
+      } catch (err) {
+        console.error(`Failed to sync Discord member ${member.user?.id}`, err)
+      }
+    }
+
+    after = members.at(-1).user.id
+    if (members.length < 1000) break
+  }
+  console.log(`Synced ${synced} Discord guild members`)
+  console.timeEnd('Sync guild members')
+}
+
+discord.once.READY().then(syncGuildMembers).catch(err => {
+  console.error('Failed to sync Discord guild members', err)
+})
 
 const getDiscordDataForAccount = async (account) => {
   const userData = activeUsersByAccount[account]
@@ -255,6 +332,7 @@ const _guildMemberUpdateExample = {
   avatar: null
 }
 */
+discord.on.GUILD_MEMBER_ADD(syncUserData)
 discord.on.GUILD_MEMBER_UPDATE(syncUserData)
 
 const IsAlliance = race =>

@@ -19,7 +19,7 @@ const eventTypes = {
     // 'CHANNEL_PINS_UPDATE',
   ],
   GUILD_MEMBERS: [
-    // 'GUILD_MEMBER_ADD',
+    'GUILD_MEMBER_ADD',
     'GUILD_MEMBER_UPDATE',
     // 'GUILD_MEMBER_REMOVE',
     'GUILD_MEMBERS_CHUNK',
@@ -367,6 +367,12 @@ discord.rest.POST_CHANNEL_MESSAGE = ({ channel, content }) =>
       flags: 4, // disable embeds
       allowed_mentions: { parse: [] }, // disable pings
     },
+  })
+
+discord.rest.GET_GUILD_MEMBERS = ({ guild, after = '0', limit = 1000 }) =>
+  rest(`/guilds/${guild}/members?${new URLSearchParams({ after, limit })}`, {
+    method: "GET",
+    headers: { authorization },
   })
 
 
