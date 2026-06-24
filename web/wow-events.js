@@ -137,15 +137,15 @@ export async function handleInitialStateEvents() {
     WHERE type = "STARTUP" AND world=${worldId}
     ORDER BY at DESC LIMIT 1
   `
-
+  const start = startup?.at || Math.floor(Date.now() / 1000)
   const events = await sql`
-    SELECT * FROM acore_auth.web_events WHERE world=${worldId} AND at > ${startup.at}
+    SELECT * FROM acore_auth.web_events WHERE world=${worldId} AND at > ${start}
   `
 
-  await handleSingleEvent(startup)
+  startup && (await handleSingleEvent(startup))
   for (const event of events) {
     await handleSingleEvent(event)
   }
   handleNewEvents()
-  return startup.at
+  return start
 }
