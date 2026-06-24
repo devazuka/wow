@@ -17,19 +17,20 @@ const STATE = {
 
 const prefix = Deno.env.get('DB_PREFIX') || 'acore_'
 const origin = Deno.env.get('ORIGIN') || 'https://chupato.github.io'
+const worldPidFile = Deno.env.get('WORLD_PID_FILE')
 const charDb = `${prefix}characters`
 
 const getRecentActivePlayers = () => sql([`
   SELECT
-      c.guid as id,
-      c.account,
-      c.name,
-      c.race,
-      c.class,
-      "World" as location,
-      c.logout_time * 1000 as logoutAt,
-      0 as loginAt
-    FROM ${charDb}.characters c
+    c.guid as id,
+    c.account,
+    c.name,
+    c.race,
+    c.class,
+    "World" as location,
+    c.logout_time * 1000 as logoutAt,
+    0 as loginAt
+  FROM ${charDb}.characters c
   ORDER BY c.logout_time DESC
   LIMIT 10
 `])
@@ -68,6 +69,33 @@ const seedInitialState = async () => {
 }
 
 let killRequested = false
+const killWorldServer = async () => {
+  if (!worldPidFile) {
+    console.log('WORLD_PID_FILE is not set; skipping worldserver kill')
+    return
+  }
+
+  let pid
+  try {
+    pid = (await Deno.readTextFile(worldPidFile)).trim()
+  } catch (err) {
+    console.error(`Failed to read WORLD_PID_FILE ${worldPidFile}`, err)
+    return
+  }
+
+  if (!/^[1-9][0-9]*$/.test(pid)) {
+    console.error(`Invalid worldserver PID in ${worldPidFile}: ${JSON.stringify(pid)}`)
+    return
+  }
+
+  console.log('Server stuck, killing PID', pid)
+  try {
+    await sh`kill -9 ${pid}`
+  } catch (err) {
+    console.error(`Failed to kill worldserver PID ${pid}`, err)
+  }
+}
+
 const checkServerState = async () => {
   const infos = await ac`server info`
   setTimeout(checkServerState, infos.success ? 5000 : 250)
@@ -83,7 +111,7 @@ const checkServerState = async () => {
       // send the kill signal
       killRequested = true
       console.log('Server stuck, trying to kill')
-      await sh`killall -9 worldserver`
+      await killWorldServer()
     }
     return
   }
