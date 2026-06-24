@@ -59,7 +59,7 @@ const parseSoap = (text) => {
 
 export const ac = async (strings, ...values) => {
   try {
-    const res = await fetch(`http://${hostname}:${SOAP_PORT}`, {
+    const res = await fetch(`http://127.0.0.1:${SOAP_PORT}`, {
       method: 'POST',
       headers: { authorization },
       signal: AbortSignal.timeout(2000),
